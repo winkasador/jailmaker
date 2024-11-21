@@ -1,0 +1,22 @@
+[package]
+name = "Jailmaker"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+notan = "0.12.1"
+notan_egui = "=0.12.1"
+toml = "0.8.19"
+
+[profile.dev]
+opt-level = 1
+incremental = true
+panic = "unwind"
+overflow-checks = true
+debug = "full"
+
+[profile.release]
+opt-level = 3
+incremental = true
+panic = "abort"
+debug = "limited"
