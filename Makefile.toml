@@ -1,0 +1,11 @@
+[tasks.build]
+command = "cargo"
+args = ["build"]
+
+[tasks.copy-assets]
+script = "xcopy assets\\ target\\debug\\assets\\ /y /e /q /h"
+
+[tasks.run]
+command = "cargo"
+args = ["run"]
+dependencies = ["build", "copy-assets"]
