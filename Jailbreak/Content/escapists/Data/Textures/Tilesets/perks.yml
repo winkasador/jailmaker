@@ -1,0 +1,4 @@
+path: Escapists|images/tiles_perks.gif
+encryption:
+  mode: blowfish-compat
+  key: mothking

@@ -1,0 +1,29 @@
+grounds:
+  # Official
+  - id: perks
+    texture_path: Escapists|images/ground_perks.gif
+  - id: stalagflucht
+    texture_path: Escapists|images/ground_stalagflucht.gif
+  - id: shanktonstatepen
+    texture_path: Escapists|images/ground_shanktonstatepen.gif
+  - id: jungle
+    texture_path: Escapists|images/ground_jungle.gif
+  - id: sanpancho
+    texture_path: Escapists|images/ground_sanpancho.gif
+  - id: irongate
+    texture_path: Escapists|images/ground_irongate.gif
+    # Custom
+  - id: perks_custom
+    texture_path: Escapists|images/custom/ground_cus_perks.gif
+  - id: stalagflucht_custom
+    texture_path: Escapists|images/custom/ground_cus_stalagflucht.gif
+  - id: shanktonstatepen_custom
+    texture_path: Escapists|images/custom/ground_cus_shanktonstatepen.gif
+  - id: jungle_custom
+    texture_path: Escapists|images/custom/ground_cus_jungle.gif
+  - id: sanpancho_custom
+    texture_path: Escapists|images/custom/ground_cus_sanpancho.gif
+  - id: irongate_custom
+    texture_path: Escapists|images/custom/ground_cus_irongate.gif
+  - id: water_custom
+    texture_path: Escapists|images/custom/ground_cus_water.gif

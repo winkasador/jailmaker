@@ -1,0 +1,11 @@
+id: escapists
+type: mod
+authors:
+  - name: Winkassador!
+    links: [https://github.com/winkasador/]
+credits:
+  - name: Mouldy Toof Studios
+  - name: Team17
+
+macros:
+  Escapists: C:/Program Files (x86)/Steam/steamapps/common/The Escapists/Data/

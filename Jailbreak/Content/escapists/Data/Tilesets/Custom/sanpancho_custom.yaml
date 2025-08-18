@@ -1,0 +1,4 @@
+id: sanpancho_custom
+custom: true
+texture_path: Escapists|images/custom/tiles_cus_sanpancho.gif
+tile_count: 100

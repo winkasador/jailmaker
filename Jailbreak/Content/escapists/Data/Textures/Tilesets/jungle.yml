@@ -1,0 +1,4 @@
+path: Escapists|images/tiles_jungle.gif
+encryption:
+  mode: blowfish-compat
+  key: mothking

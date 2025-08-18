@@ -1,0 +1,4 @@
+path: Escapists|images/tiles_irongate.gif
+encryption:
+  mode: blowfish-compat
+  key: mothking

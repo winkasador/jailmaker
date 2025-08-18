@@ -1,0 +1,97 @@
+id: placeholder
+texture_path: Content|Textures/Tilesets/placeholder.xnb
+tile_count: 100
+editor_groups:
+  checkered_tile: [1, 2]
+  wall: [5, 6]
+  corner_wall_corner: [7, 8, 10, 9]
+  wall_three_way: [11, 12, 13, 14]
+  fence: [19, 20]
+  fence_corner: [21, 22, 24, 23]
+  vent_wall: [27, 28, 30, 29]
+  vent_wall_corner: [40, 41]
+  roof_wall: [31, 32]
+  roof_wall_corner: [36, 37, 35, 34]
+  roof_wall_end: [52, 51, 53, 54]
+  reinforced_wall: [62, 63]
+  utility_floor: [17, 64]
+  stairs: [95, 96]
+  carpet: [92, 93, 94]
+  decoration: [48, 98, 99, 80]
+  tower_wall: [76, 83]
+  tower_wall_corner: [77, 75, 79, 81]
+  tower_wall_base: [78, 84, 82]
+  electric_fence: [89, 90]
+  roof_layer: [42, 43, 44]
+  roof_pipe: [45, 46]
+  water_edge: [47, 38, 74, 39]
+  water_corner: [70, 69, 72, 71]
+  roof_mask: [87, 86, 88]
+  path_corner: [65, 68, 67, 66]
+tiles:
+  - index: 0
+    has_shadow: false
+    tile_type: floor
+  - index: 1
+    has_shadow: false
+    tile_type: floor
+  - index: 2
+    has_shadow: false
+    tile_type: floor
+  - index: 5
+    has_shadow: true
+    tile_type: chippable_wall
+  - index: 6
+    has_shadow: true
+    tile_type: chippable_wall
+  - index: 7
+    has_shadow: true
+    tile_type: wall
+  - index: 8
+    has_shadow: true
+    tile_type: wall
+  - index: 9
+    has_shadow: true
+    tile_type: wall
+  - index: 10
+    has_shadow: true
+    tile_type: wall
+  - index: 11
+    has_shadow: true
+    tile_type: wall
+  - index: 12
+    has_shadow: true
+    tile_type: wall
+  - index: 13
+    has_shadow: true
+    tile_type: wall
+  - index: 14
+    has_shadow: true
+    tile_type: wall
+  - index: 15
+    has_shadow: true
+    tile_type: wall
+  - index: 19
+    has_shadow: true
+    tile_type: cuttable_fence
+  - index: 20
+    has_shadow: true
+    tile_type: cuttable_fence
+  - index: 21
+    has_shadow: true
+    tile_type: fence
+  - index: 22
+    has_shadow: true
+    tile_type: fence
+  - index: 23
+    has_shadow: true
+    tile_type: fence
+  - index: 24
+    has_shadow: true
+    tile_type: fence
+  - index: 26
+    has_shadow: true
+    tile_type: fence
+  - index: 33
+    has_shadow: true
+    tile_type: window

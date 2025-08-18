@@ -1,0 +1,9 @@
+# Requirement Options
+# map_loaded, can_paste, can_undo, can_redo 
+
+file:
+  editor.open_file:
+
+view:
+  editor.toggle_grid:
+    requirements: [map_loaded]

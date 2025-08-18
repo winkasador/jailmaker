@@ -1,0 +1,12 @@
+toilet:
+  states:
+    right:
+      animation:
+        texture: Textures/Objects/toilet_right
+        frames: 1
+      id: 3
+    left:
+      id: 105
+    down:
+      id: 106
+  tab_order: [right, down, left]

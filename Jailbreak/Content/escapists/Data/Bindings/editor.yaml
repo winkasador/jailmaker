@@ -1,0 +1,93 @@
+# Keybindings #
+  
+# Window Keybindings
+window.toggle_fullscreen:
+  primary: f11
+  secondary: enter
+  secondary_modifiers: [alt]
+  lockout: true
+
+# Editor Keybindings
+editor.mode.paint:
+  primary: b
+  lockout: true
+editor.mode.erase:
+  primary: x
+  lockout: true
+editor.mode.select:
+  primary: m
+  lockout: true
+editor.mode.fill:
+  primary: f
+  lockout: true
+
+editor.toggle_mode:
+  primary: space
+  lockout: true
+editor.toggle_grid:
+  primary: g
+  lockout: true
+
+editor.move_up:
+  primary: w
+editor.move_left:
+  primary: a
+editor.move_down:
+  primary: s
+editor.move_right:
+  primary: d
+
+editor.move_tile_up:
+  primary: up
+editor.move_tile.down:
+  primary: down
+editor.move_tile_left:
+  primary: left
+editor.move_tile_right:
+  primary: right
+
+editor.ascend_floor:
+  primary: plus
+  lockout: true
+editor.descend_floor:
+  primary: minus
+  lockout: true
+
+editor.zoom_in:
+  primary: q
+editor.zoom_out:
+  primary: e
+
+editor.undo:
+  primary: z
+  primary_modifiers: [control]
+  timeout: 0.2
+
+editor.open_file:
+  primary: o
+  primary_modifiers: [control]
+  lockout: true
+
+editor.quit:
+  primary: q
+  primary_modifiers: [control]
+  lockout: true
+
+editor.window.tiles:
+  primary: t
+  lockout: true
+editor.window.properties:
+  primary: p
+  lockout: true
+
+editor.next:
+  primary: tab
+  lockout: true
+
+editor.negate:
+  primary: shift
+
+# Debug Keybindings
+debug.toggle_debug_ui:
+  primary: f3
+  lockout: true

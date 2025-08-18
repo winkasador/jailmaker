@@ -1,0 +1,70 @@
+id: perks
+texture_path: Escapists|images/tiles_perks.gif
+tile_count: 100
+tiles:
+  - index: 0
+    has_shadow: false
+    tile_type: floor
+  - index: 1
+    has_shadow: false
+    tile_type: floor
+  - index: 2
+    has_shadow: false
+    tile_type: floor
+  - index: 5
+    has_shadow: true
+    tile_type: chippable_wall
+  - index: 6
+    has_shadow: true
+    tile_type: chippable_wall
+  - index: 7
+    has_shadow: true
+    tile_type: wall
+  - index: 8
+    has_shadow: true
+    tile_type: wall
+  - index: 9
+    has_shadow: true
+    tile_type: wall
+  - index: 10
+    has_shadow: true
+    tile_type: wall
+  - index: 11
+    has_shadow: true
+    tile_type: wall
+  - index: 12
+    has_shadow: true
+    tile_type: wall
+  - index: 13
+    has_shadow: true
+    tile_type: wall
+  - index: 14
+    has_shadow: true
+    tile_type: wall
+  - index: 15
+    has_shadow: true
+    tile_type: wall
+  - index: 19
+    has_shadow: true
+    tile_type: cuttable_fence
+  - index: 20
+    has_shadow: true
+    tile_type: cuttable_fence
+  - index: 21
+    has_shadow: true
+    tile_type: fence
+  - index: 22
+    has_shadow: true
+    tile_type: fence
+  - index: 23
+    has_shadow: true
+    tile_type: fence
+  - index: 24
+    has_shadow: true
+    tile_type: fence
+  - index: 26
+    has_shadow: true
+    tile_type: fence
+  - index: 33
+    has_shadow: true
+    tile_type: window
