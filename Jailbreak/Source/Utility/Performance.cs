@@ -68,7 +68,7 @@ public class Performance {
         DrawTime.Value = _drawLoopStopwatch.ElapsedMilliseconds;
     }
 
-    public void Update(float delta) {
+    public void Tick(float delta) {
         FrameTime.Value = UpdateTime.Value + DrawTime.Value;
         CurrentMemoryUsage.Value = GC.GetTotalMemory(false);
         MaximumAvailableMemory.Value = Environment.WorkingSet;

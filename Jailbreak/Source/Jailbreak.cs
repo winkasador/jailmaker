@@ -181,7 +181,7 @@ public class Jailbreak : Game {
         base.Update(gameTime);
 
         _performance.EndUpdate();
-        _performance.Update(deltaTime);
+        _performance.Tick(deltaTime);
     }
 
     protected override void Draw(GameTime gameTime) {

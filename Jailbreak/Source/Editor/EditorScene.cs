@@ -39,6 +39,7 @@ public class EditorScene : Scene.Scene {
 
     private SpriteBatch _batch;
     private EditorMapRenderer _renderer;
+    private EditorDebugHUD _debugHUD;
     private MapLoader _mapLoader;
 
     private Desktop _desktop;
@@ -99,6 +100,8 @@ public class EditorScene : Scene.Scene {
 
         _font = Game.Content.Load<SpriteFont>("escapists/Fonts/Escapists");
         _titleFont = Game.Content.Load<SpriteFont>("escapists/Fonts/8BitSnobbery");
+
+        _debugHUD = new EditorDebugHUD(services, _font);
 
         EditorSoundEffects.LoadSounds(_contentManager);
         _desktop = new Desktop();
@@ -377,7 +380,7 @@ public class EditorScene : Scene.Scene {
 
         if (_state.drawDebugWidgets) {
             _batch.Begin();
-            DrawDebugInfo();
+            _debugHUD.Draw(_batch, new Rectangle(0, 20, Game.GraphicsDevice.Viewport.Width, Game.GraphicsDevice.Viewport.Height - 20));
             _batch.End();
         }
 
@@ -512,30 +515,6 @@ public class EditorScene : Scene.Scene {
 
         if (_propertiesWindow.Visible) EditorSoundEffects.OPEN_MENU.Play();
         else EditorSoundEffects.CLOSE_MENU.Play();
-    }
-
-    private void DrawDebugInfo() {
-        int verticalOffset = 4;
-        _batch.DrawString(_font, $"Jailbreak Editor 0.1", new Vector2(5, verticalOffset), Color.White);
-        _batch.DrawString(_font, $"Mod: '{Game.Mod.Id}' by {Game.Mod.Authors[0].Name}", new Vector2(5, verticalOffset += 25), Color.White);
-        _batch.DrawString(_font, $"FPS: {Game.FPS}{(Game.TargetFPS == -1 ? "" : "/" + Game.TargetFPS)}{(Game.Vsync ? " (Vsync)" : "")}", new Vector2(5, verticalOffset += 25), Color.White);
-        _batch.DrawString(_font, $"Frame Time: {Game.FrameTime / 10000:F1}ms (Update: {Game.UpdateFrameTime / 10000:F1}ms, Draw: {Game.DrawFrameTime / 10000:F1}ms)", new Vector2(5, verticalOffset += 25), Color.White);
-        double memoryUsage = Game.CurrentMemoryUsage / (1024 * 1024);
-        double memoryLimit = Game.MaximumAvailableMemory / (1024 * 1024);
-        _batch.DrawString(_font, $"Memory: {memoryUsage:F1}MB / {memoryLimit:F1}MB", new Vector2(5, verticalOffset += 25), Color.White);
-
-        verticalOffset += 25;
-
-        _batch.DrawString(_font, "Content:", new Vector2(5, verticalOffset += 25), Color.White);
-        foreach (Type contentType in _contentManager.GetSupportedContentTypes()) {
-            _batch.DrawString(_font, $"- {_contentManager.GetContentName(contentType)}: {_contentManager.GetAmountOfContentType(contentType)}", new Vector2(5, verticalOffset += 25), Color.White);
-
-        }
-
-        verticalOffset += 25;
-
-        _batch.DrawString(_font, "Editor", new Vector2(5, verticalOffset += 25), Color.White);
-        _batch.DrawString(_font, $"Selected Tile: {_state.selectedTile} (Index: {_state.selectedTile - 1})", new Vector2(5, verticalOffset += 25), Color.White);
     }
 
     public void MoveCameraToMapCentre(Map map) {
