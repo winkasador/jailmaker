@@ -59,13 +59,13 @@ public class Performance {
     public void BeginUpdate() => _updateLoopStopwatch.Restart();
     public void EndUpdate() {
         _updateLoopStopwatch.Stop();
-        UpdateTime.Value = _updateLoopStopwatch.Elapsed.Ticks;
+        UpdateTime.Value = _updateLoopStopwatch.ElapsedMilliseconds;
     }
 
     public void BeginDraw() => _drawLoopStopwatch.Restart();
     public void EndDraw() {
         _drawLoopStopwatch.Stop();
-        DrawTime.Value = _drawLoopStopwatch.Elapsed.Ticks;
+        DrawTime.Value = _drawLoopStopwatch.ElapsedMilliseconds;
     }
 
     public void Update(float delta) {
