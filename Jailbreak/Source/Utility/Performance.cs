@@ -31,11 +31,17 @@ public class Performance {
         CurrentFPS = new Monitor<int>();
         TargetFPS = new Monitor<int>();
         IsVSync = new Monitor<bool>();
+        FrameTime = new Monitor<long>();
+        UpdateTime = new Monitor<long>();
+        DrawTime = new Monitor<long>();
 
         _monitors = new Dictionary<string, IMonitor> {
             { "fps", CurrentFPS },
             { "target_fps", TargetFPS },
-            { "vsync", IsVSync }
+            { "vsync", IsVSync },
+            { "frame_time", FrameTime },
+            { "update_time", UpdateTime },
+            { "draw_time", DrawTime },
         };
     }
 

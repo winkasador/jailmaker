@@ -43,9 +43,6 @@ public class Jailbreak : Game {
     private float _lastUpdateFrameTime;
     private float _lastDrawFrameTime;
 
-    private Stopwatch _updateLoopStopwatch;
-    private Stopwatch _drawLoopStopwatch;
-
     private long _currentMemoryUsage;
     private long _maximumAvailableMemory;
     #endregion
@@ -112,6 +109,8 @@ public class Jailbreak : Game {
         
         _logger = Log.ForContext<Jailbreak>();
 
+        _performance = new Performance(this, _graphics);
+
         var deserializer = new DeserializerBuilder()
             .IgnoreUnmatchedProperties()
             .WithNamingConvention(YamlDotNet.Serialization.NamingConventions.UnderscoredNamingConvention.Instance)
@@ -168,9 +167,6 @@ public class Jailbreak : Game {
         serviceCollection.AddSingleton(_performance);
         _services = serviceCollection.BuildServiceProvider();
 
-        _updateLoopStopwatch = new Stopwatch();
-        _drawLoopStopwatch = new Stopwatch();
-
         _logger.Information("Finished Initializing.");
 
         base.Initialize();
@@ -184,7 +180,7 @@ public class Jailbreak : Game {
     }
 
     protected override void Update(GameTime gameTime) {
-        _updateLoopStopwatch.Restart();
+        _performance.BeginUpdate();
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
         _inputManager.Update(deltaTime);
@@ -220,21 +216,18 @@ public class Jailbreak : Game {
         _performance.TargetFPS.Value = _targetFPS;
         _performance.IsVSync.Value = _vsync;
 
-        _updateLoopStopwatch.Stop();
-        _lastUpdateFrameTime = _updateLoopStopwatch.ElapsedTicks;
-
+        _performance.EndUpdate();
         _performance.Update(deltaTime);
     }
 
     protected override void Draw(GameTime gameTime) {
-        _drawLoopStopwatch.Restart();
+        _performance.BeginDraw();
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
         _sceneManager.Scene?.Draw(deltaTime);
         base.Draw(gameTime);
 
-        _drawLoopStopwatch.Stop();
-        _lastDrawFrameTime = _drawLoopStopwatch.ElapsedTicks;
+        _performance.EndDraw();
     }
 
     protected override void UnloadContent() {
