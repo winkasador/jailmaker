@@ -1,28 +1,65 @@
 using System.Collections.Generic;
+using System.Diagnostics;
+using Microsoft.Xna.Framework;
 
 namespace Jailbreak.Utility;
 
-public static class Performance {
+public class Performance {
 
-    public const string FPS = "fps";
-    public const string TARGET_FPS = "target_fps";
-    public const string VSYNC = "vsync";
+    private Game _game;
+    private GraphicsDeviceManager _graphics;
 
-    private static Dictionary<string, IMonitor> _monitors;
+    private Stopwatch _updateLoopStopwatch;
+    private Stopwatch _drawLoopStopwatch;
 
-    static Performance() {
+    public Monitor<int> CurrentFPS { get; }
+    public Monitor<int> TargetFPS { get; }
+    public Monitor<bool> IsVSync { get; }
+    public Monitor<long> FrameTime { get; }
+    public Monitor<long> UpdateTime { get; }
+    public Monitor<long> DrawTime { get; }
+
+    private Dictionary<string, IMonitor> _monitors;
+
+    public Performance(Game game, GraphicsDeviceManager graphics) {
+        _game = game;
+        _graphics = graphics;
+
+        _updateLoopStopwatch = new Stopwatch();
+        _drawLoopStopwatch = new Stopwatch();
+
+        CurrentFPS = new Monitor<int>();
+        TargetFPS = new Monitor<int>();
+        IsVSync = new Monitor<bool>();
+
         _monitors = new Dictionary<string, IMonitor> {
-            { FPS, new Monitor<int>() },
-            { TARGET_FPS, new Monitor<int>() },
-            { VSYNC, new Monitor<bool>() }
+            { "fps", CurrentFPS },
+            { "target_fps", TargetFPS },
+            { "vsync", IsVSync }
         };
     }
 
-    public static void RegisterMonitor(string monitorName, IMonitor monitor) {
+    public void BeginUpdate() => _updateLoopStopwatch.Restart();
+    public void EndUpdate() {
+        _updateLoopStopwatch.Stop();
+        UpdateTime.Value = _updateLoopStopwatch.Elapsed.Ticks;
+    }
+
+    public void BeginDraw() => _drawLoopStopwatch.Restart();
+    public void EndDraw() {
+        _drawLoopStopwatch.Stop();
+        DrawTime.Value = _drawLoopStopwatch.Elapsed.Ticks;
+    }
+
+    public void Update(float delta) {
+        FrameTime.Value = UpdateTime.Value + DrawTime.Value;
+    }
+
+    public void AddCustomMonitor(string monitorName, IMonitor monitor) {
         _monitors.Add(monitorName, monitor);
     }
 
-    public static Monitor<T> GetMonitor<T>(string monitorName) {
+    public Monitor<T> GetMonitor<T>(string monitorName) {
         if(_monitors.TryGetValue(monitorName, out var monitor)) {
             if (monitor is Monitor<T> tMonitor) {
                 return tMonitor;

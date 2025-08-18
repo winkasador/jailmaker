@@ -14,6 +14,7 @@ using Jailbreak.Mod;
 using System.Linq;
 using Jailbreak.Content.Handler;
 using Serilog;
+using Jailbreak.Utility;
 
 namespace Jailbreak;
 
@@ -28,6 +29,7 @@ public class Jailbreak : Game {
 
     private ModManager _modManager;
     private DynamicContentManager _contentManager;
+    private Performance _performance;
 
     private IServiceProvider _services;
 
@@ -54,34 +56,42 @@ public class Jailbreak : Game {
         IsMouseVisible = true;
     }
 
+    [Obsolete]
     public float FPS {
-        get { return _fps; }
+        get { return _performance.CurrentFPS.Value; }
     }
 
+    [Obsolete]
     public bool Vsync {
-        get { return _vsync; }
+        get { return _performance.IsVSync.Value; }
     }
 
+    [Obsolete]
     public int TargetFPS {
-        get { return _targetFPS; }
+        get { return _performance.TargetFPS.Value; }
     }
 
+    [Obsolete]
     public float FrameTime {
-        get { return _lastUpdateFrameTime + _lastDrawFrameTime; }
+        get { return _performance.FrameTime.Value; }
     }
 
+    [Obsolete]
     public float UpdateFrameTime {
-        get { return _lastUpdateFrameTime; }
+        get { return _performance.UpdateTime.Value; }
     }
 
+    [Obsolete]
     public float DrawFrameTime {
-        get { return _lastDrawFrameTime; }
+        get { return _performance.DrawTime.Value; }
     }
 
+    [Obsolete]
     public long CurrentMemoryUsage {
         get { return _currentMemoryUsage; }
     }
 
+    [Obsolete]
     public long MaximumAvailableMemory {
         get { return _maximumAvailableMemory; }
     }
@@ -155,6 +165,7 @@ public class Jailbreak : Game {
         serviceCollection.AddSingleton(_contentManager);
         serviceCollection.AddSingleton(_graphics);
         serviceCollection.AddSingleton(_sceneManager);
+        serviceCollection.AddSingleton(_performance);
         _services = serviceCollection.BuildServiceProvider();
 
         _updateLoopStopwatch = new Stopwatch();
@@ -179,7 +190,7 @@ public class Jailbreak : Game {
         _inputManager.Update(deltaTime);
 
         // Doesn't work quite right.
-        if(_inputManager.IsKeybindingTriggered("window.toggle_fullscreen")) {
+        if (_inputManager.IsKeybindingTriggered("window.toggle_fullscreen")) {
             _graphics.ToggleFullScreen();
         }
 
@@ -192,7 +203,7 @@ public class Jailbreak : Game {
         _currentMemoryUsage = GC.GetTotalMemory(false);
         _maximumAvailableMemory = Environment.WorkingSet;
 
-        if(!IsFixedTimeStep && !_graphics.SynchronizeWithVerticalRetrace) _targetFPS = -1;
+        if (!IsFixedTimeStep && !_graphics.SynchronizeWithVerticalRetrace) _targetFPS = -1;
         else _targetFPS = (int)(1 / TargetElapsedTime.TotalSeconds);
         _vsync = _graphics.SynchronizeWithVerticalRetrace;
 
@@ -205,8 +216,14 @@ public class Jailbreak : Game {
             _fpsCounter -= 1f;
         }
 
+        _performance.CurrentFPS.Value = (int)_fps;
+        _performance.TargetFPS.Value = _targetFPS;
+        _performance.IsVSync.Value = _vsync;
+
         _updateLoopStopwatch.Stop();
         _lastUpdateFrameTime = _updateLoopStopwatch.ElapsedTicks;
+
+        _performance.Update(deltaTime);
     }
 
     protected override void Draw(GameTime gameTime) {
