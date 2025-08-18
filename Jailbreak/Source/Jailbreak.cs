@@ -39,46 +39,6 @@ public class Jailbreak : Game {
         IsMouseVisible = true;
     }
 
-    [Obsolete]
-    public float FPS {
-        get { return _performance.CurrentFPS.Value; }
-    }
-
-    [Obsolete]
-    public bool Vsync {
-        get { return _performance.IsVSync.Value; }
-    }
-
-    [Obsolete]
-    public int TargetFPS {
-        get { return _performance.TargetFPS.Value; }
-    }
-
-    [Obsolete]
-    public float FrameTime {
-        get { return _performance.FrameTime.Value; }
-    }
-
-    [Obsolete]
-    public float UpdateFrameTime {
-        get { return _performance.UpdateTime.Value; }
-    }
-
-    [Obsolete]
-    public float DrawFrameTime {
-        get { return _performance.DrawTime.Value; }
-    }
-
-    [Obsolete]
-    public long CurrentMemoryUsage {
-        get { return _performance.CurrentMemoryUsage.Value; }
-    }
-
-    [Obsolete]
-    public long MaximumAvailableMemory {
-        get { return _performance.MaximumAvailableMemory.Value; }
-    }
-
     public ModDefinition Mod {
         get { return _mod; }
     }
