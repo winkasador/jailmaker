@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
@@ -18,6 +19,8 @@ public class Performance {
     public Monitor<long> FrameTime { get; }
     public Monitor<long> UpdateTime { get; }
     public Monitor<long> DrawTime { get; }
+    public Monitor<long> CurrentMemoryUsage { get; }
+    public Monitor<long> MaximumAvailableMemory { get; }
 
     private Dictionary<string, IMonitor> _monitors;
 
@@ -34,6 +37,8 @@ public class Performance {
         FrameTime = new Monitor<long>();
         UpdateTime = new Monitor<long>();
         DrawTime = new Monitor<long>();
+        CurrentMemoryUsage = new Monitor<long>();
+        MaximumAvailableMemory = new Monitor<long>();
 
         _monitors = new Dictionary<string, IMonitor> {
             { "fps", CurrentFPS },
@@ -42,6 +47,8 @@ public class Performance {
             { "frame_time", FrameTime },
             { "update_time", UpdateTime },
             { "draw_time", DrawTime },
+            { "memory_usage", CurrentMemoryUsage },
+            { "maximum_memory", MaximumAvailableMemory },
         };
     }
 
@@ -59,6 +66,8 @@ public class Performance {
 
     public void Update(float delta) {
         FrameTime.Value = UpdateTime.Value + DrawTime.Value;
+        CurrentMemoryUsage.Value = GC.GetTotalMemory(false);
+        MaximumAvailableMemory.Value = Environment.WorkingSet;
     }
 
     public void AddCustomMonitor(string monitorName, IMonitor monitor) {

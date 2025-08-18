@@ -40,11 +40,6 @@ public class Jailbreak : Game {
     private float _fpsCounter;
     private int _fpsCount;
 
-    private float _lastUpdateFrameTime;
-    private float _lastDrawFrameTime;
-
-    private long _currentMemoryUsage;
-    private long _maximumAvailableMemory;
     #endregion
 
     public Jailbreak() {
@@ -85,12 +80,12 @@ public class Jailbreak : Game {
 
     [Obsolete]
     public long CurrentMemoryUsage {
-        get { return _currentMemoryUsage; }
+        get { return _performance.CurrentMemoryUsage.Value; }
     }
 
     [Obsolete]
     public long MaximumAvailableMemory {
-        get { return _maximumAvailableMemory; }
+        get { return _performance.MaximumAvailableMemory.Value; }
     }
 
     public ModDefinition Mod {
@@ -195,9 +190,6 @@ public class Jailbreak : Game {
         base.Update(gameTime);
 
         // Performance Tracking
-
-        _currentMemoryUsage = GC.GetTotalMemory(false);
-        _maximumAvailableMemory = Environment.WorkingSet;
 
         if (!IsFixedTimeStep && !_graphics.SynchronizeWithVerticalRetrace) _targetFPS = -1;
         else _targetFPS = (int)(1 / TargetElapsedTime.TotalSeconds);
