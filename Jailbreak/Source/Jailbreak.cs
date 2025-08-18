@@ -33,15 +33,6 @@ public class Jailbreak : Game {
 
     private IServiceProvider _services;
 
-    #region Performance Tracking
-    private bool _vsync;
-    private int _targetFPS;
-    private float _fps;
-    private float _fpsCounter;
-    private int _fpsCount;
-
-    #endregion
-
     public Jailbreak() {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content/";
@@ -188,25 +179,6 @@ public class Jailbreak : Game {
         _sceneManager.Scene?.Update(deltaTime);
 
         base.Update(gameTime);
-
-        // Performance Tracking
-
-        if (!IsFixedTimeStep && !_graphics.SynchronizeWithVerticalRetrace) _targetFPS = -1;
-        else _targetFPS = (int)(1 / TargetElapsedTime.TotalSeconds);
-        _vsync = _graphics.SynchronizeWithVerticalRetrace;
-
-        _fpsCounter += deltaTime;
-        _fpsCount++;
-
-        if (_fpsCounter >= 1f) {
-            _fps = _fpsCount;
-            _fpsCount = 0;
-            _fpsCounter -= 1f;
-        }
-
-        _performance.CurrentFPS.Value = (int)_fps;
-        _performance.TargetFPS.Value = _targetFPS;
-        _performance.IsVSync.Value = _vsync;
 
         _performance.EndUpdate();
         _performance.Update(deltaTime);

@@ -13,6 +13,10 @@ public class Performance {
     private Stopwatch _updateLoopStopwatch;
     private Stopwatch _drawLoopStopwatch;
 
+    private float _fps;
+    private float _fpsCounter;
+    private int _fpsCount;
+
     public Monitor<int> CurrentFPS { get; }
     public Monitor<int> TargetFPS { get; }
     public Monitor<bool> IsVSync { get; }
@@ -68,6 +72,21 @@ public class Performance {
         FrameTime.Value = UpdateTime.Value + DrawTime.Value;
         CurrentMemoryUsage.Value = GC.GetTotalMemory(false);
         MaximumAvailableMemory.Value = Environment.WorkingSet;
+        IsVSync.Value = _graphics.SynchronizeWithVerticalRetrace;
+
+        if (!_game.IsFixedTimeStep && !_graphics.SynchronizeWithVerticalRetrace) TargetFPS.Value = -1;
+        else TargetFPS.Value = (int)(1 / _game.TargetElapsedTime.TotalSeconds);
+
+        _fpsCounter += delta;
+        _fpsCount++;
+
+        if (_fpsCounter >= 1f) {
+            _fps = _fpsCount;
+            _fpsCount = 0;
+            _fpsCounter -= 1f;
+        }
+
+        CurrentFPS.Value = (int)_fps;
     }
 
     public void AddCustomMonitor(string monitorName, IMonitor monitor) {
