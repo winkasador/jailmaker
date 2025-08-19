@@ -12,6 +12,8 @@ grounds:
     texture_path: Escapists|images/ground_sanpancho.gif
   - id: irongate
     texture_path: Escapists|images/ground_irongate.gif
+  - id: alca
+    texture_path: Escapists|images/ground_alca.gif
     # Custom
   - id: perks_custom
     texture_path: Escapists|images/custom/ground_cus_perks.gif
