@@ -19,7 +19,7 @@ using Jailbreak.Utility;
 namespace Jailbreak;
 
 public class Jailbreak : Game {
-    
+
     private ModDefinition _mod;
     private ILogger _logger;
 
@@ -32,6 +32,8 @@ public class Jailbreak : Game {
     private Performance _performance;
 
     private IServiceProvider _services;
+
+    private bool _isInitialized = false;
 
     public Jailbreak() {
         _graphics = new GraphicsDeviceManager(this);
@@ -52,7 +54,7 @@ public class Jailbreak : Game {
             .WriteTo.File("./logs/log.txt")
             .MinimumLevel.Debug()
             .CreateLogger();
-        
+
         _logger = Log.ForContext<Jailbreak>();
 
         _performance = new Performance(this, _graphics);
@@ -72,23 +74,34 @@ public class Jailbreak : Game {
         IsFixedTimeStep = true;
         _graphics.ApplyChanges();
 
+        base.Initialize();
+
+        _sceneManager = new SceneManager(this);
+
         _modManager = new ModManager(this);
         _modManager.DiscoverMods();
+
         var mods = _modManager.InstalledMods;
 
-        if(mods.Count == 0) {
-            return; // Display Prompt
+        if (mods.Count == 0) {
+            LoadBootstrapScene();
+            return;
         }
-        else if(mods.Count == 1) {
+        else if (mods.Count == 1) {
             _modManager.SelectMod(mods.First().Key);
         }
         else {
-            return; // Load Mod Selector
+            LoadBootstrapScene();
+            return;
         }
 
+        FinishInitialization();
+    }
+
+    public void FinishInitialization() {
         _contentManager = new DynamicContentManager(this, _modManager);
         _contentManager.AddFilePathMacro("Content|", _modManager.ActiveMod.GetBasePath());
-        foreach(var kvp in Mod.Macros) {
+        foreach (var kvp in Mod.Macros) {
             _contentManager.AddFilePathMacro(kvp.Key + "|", kvp.Value);
         }
 
@@ -101,8 +114,6 @@ public class Jailbreak : Game {
 
         _inputManager = new InputManager();
         _inputManager.Game = this;
-        
-        _sceneManager = new SceneManager(this);
 
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddSingleton(this);
@@ -113,27 +124,30 @@ public class Jailbreak : Game {
         serviceCollection.AddSingleton(_performance);
         _services = serviceCollection.BuildServiceProvider();
 
-        _logger.Information("Finished Initializing.");
+        _isInitialized = true;
 
-        base.Initialize();
+        _sceneManager.ChangeScene(new EditorScene(this, _services));
+
+        _logger.Information("Finished Initializing.");
+    }
+
+    private void LoadBootstrapScene() {
+        _sceneManager.ChangeScene(new BootstrapScene(this));
     }
 
     protected override void LoadContent() {
         MyraEnvironment.Game = this;
-
-        _sceneManager.ChangeScene(new EditorScene(this, _services));
-        //_sceneManager.ChangeScene(new ValidationScene(this, _services));
     }
 
     protected override void Update(GameTime gameTime) {
         _performance.BeginUpdate();
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-        _inputManager.Update(deltaTime);
-
-        // Doesn't work quite right.
-        if (_inputManager.IsKeybindingTriggered("window.toggle_fullscreen")) {
-            _graphics.ToggleFullScreen();
+        if (_isInitialized) {
+            _inputManager.Update(deltaTime);
+            if (_inputManager.IsKeybindingTriggered("window.toggle_fullscreen")) {
+                _graphics.ToggleFullScreen();
+            }
         }
 
         _sceneManager.Scene?.Update(deltaTime);
@@ -157,11 +171,20 @@ public class Jailbreak : Game {
     protected override void UnloadContent() {
         _logger.Information("Unloading Content.");
 
-        _contentManager.Dispose();
+        if (_isInitialized) {
+            _contentManager.Dispose();
+        }
 
         Log.CloseAndFlush();
 
         base.UnloadContent();
+    }
+
+    public enum LoadError {
+        NoContent,
+        MultipleMods,
+        NoEscapists,
+        EscapistsInvalid
     }
 
 }

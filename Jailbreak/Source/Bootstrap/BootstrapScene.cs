@@ -1,16 +1,15 @@
 using System;
-using Jailbreak.Scene;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Jailbreak;
 
-public class ValidationScene : Scene.Scene {
+public class BootstrapScene : Scene.Scene {
 
     private SpriteFont _font;
     private SpriteBatch _batch;
 
-    public ValidationScene(Jailbreak game, IServiceProvider services) : base(game, services) {
+    public BootstrapScene(Jailbreak game) : base(game, null) {
         _batch = new SpriteBatch(Game.GraphicsDevice);
         _font = Game.Content.Load<SpriteFont>("escapists/Fonts/Escapists");
     }
@@ -22,10 +21,9 @@ public class ValidationScene : Scene.Scene {
 
         _batch.Begin();
         _batch.DrawString(_font, "Something Went Wrong...", new Vector2(5, yPos), Color.White);
-        _batch.DrawString(_font, "Could not find a valid installation of the Escapists.", new Vector2(5, yPos += lineHeight * 2), Color.White);
+        _batch.DrawString(_font, "Jailmaker could not find a valid installation of the Escapists.", new Vector2(5, yPos += lineHeight * 2), Color.White);
         _batch.DrawString(_font, "Jailmaker requires the Steam version of the Escapists in order to work.", new Vector2(5, yPos += lineHeight * 2), Color.White);
         _batch.DrawString(_font, "The Console, Mobile, Unreal, and Escapists 2 versions are not supported.", new Vector2(5, yPos += lineHeight), Color.White);
-        _batch.DrawString(_font, "Click below if you have a valid installation, and tell Jailmaker where to look for it.", new Vector2(5, yPos += lineHeight * 2), Color.White);
         _batch.End();
     }
 
