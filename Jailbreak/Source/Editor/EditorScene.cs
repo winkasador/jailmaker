@@ -78,10 +78,6 @@ public class EditorScene : Scene.Scene {
         _inputManager.LoadBindingGroup(_contentManager.GetContent<List<KeyBinding>>("escapists/bindings.editor"));
 
         _state = new EditorState();
-        _state.activeFloor = 1;
-        _state.selectedTile = 1;
-
-        _state.History = new EditHistory();
 
         _camera = new Camera(Game.GraphicsDevice.Viewport);
         _renderer = new EditorMapRenderer(Game.GraphicsDevice, _contentManager);
@@ -98,7 +94,6 @@ public class EditorScene : Scene.Scene {
         _commandRegistry = new CommandRegistry();
 
         _mapLoader = new MapLoader();
-        _state.selection = Rectangle.Empty;
 
         _font = Game.Content.Load<SpriteFont>("escapists/Fonts/Escapists");
         _titleFont = Game.Content.Load<SpriteFont>("escapists/Fonts/8BitSnobbery");

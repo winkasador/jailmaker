@@ -31,4 +31,12 @@ public class EditorState {
 
     public float stateTime;
 
+    public EditorState() {
+        activeFloor = 1;
+        selectedTile = 1;
+        History = new EditHistory();
+        selection = Rectangle.Empty;
+    }
+
+
 }
