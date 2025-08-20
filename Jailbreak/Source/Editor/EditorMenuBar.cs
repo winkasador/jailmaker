@@ -14,7 +14,7 @@ public class EditorMenuBar : HorizontalMenu {
 
     private MenuItem _fileMenu;
     private InputManager _inputManager;
-    private Dictionary<ContextRequirement, MenuItem> _contextualMenuItems;
+    private Dictionary<CommandRegistry.CommandRequirement, MenuItem> _contextualMenuItems;
 
     private EditorScene _editor;
     private CommandRegistry _registry;
@@ -83,13 +83,6 @@ public class EditorMenuBar : HorizontalMenu {
             item.ShortcutText = text;
             item.ShortcutColor = Color.Gray;
         }
-    }
-
-    public enum ContextRequirement {
-        MapLoaded,
-        UndoAvailable,
-        RedoAvailable,
-        PasteAvailable
     }
 
 }
