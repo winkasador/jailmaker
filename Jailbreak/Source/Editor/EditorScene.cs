@@ -22,9 +22,6 @@ public class EditorScene : Scene.Scene {
     private const float CAMERA_MOVE_SPEED = 400f;
     private const float FAST_CAMERA_MOVE_MODIFIER = 2f;
     private const float CAMERA_ZOOM_SPEED = 2f;
-    private const int DEFAULT_TILE_SIZE = 16;
-    private const int EMPTY_TILE = 0;
-    private const int INVALID_TILE = -1;
     
     private ILogger _logger = Log.ForContext<EditorScene>();
     private Camera _camera;
@@ -176,9 +173,9 @@ public class EditorScene : Scene.Scene {
                 _state.isMiddleMouseButtonClicked = false;
                 if(_state.middleClickStartTile == _mouseTilePosition) {
                     int tileSelection = _state.Map.GetTileAt(_mouseTilePosition, _state.activeFloor);
-                    if(tileSelection != INVALID_TILE) {
-                        EditMode editMode = tileSelection == EMPTY_TILE ? EditMode.Erase : EditMode.Paint;
-                        var action = new SelectTileAction(_state, editMode, tileSelection == EMPTY_TILE ? _state.selectedTile : tileSelection);
+                    if(tileSelection != Tileset.InvalidTile) {
+                        EditMode editMode = tileSelection == Tileset.EmptyTile ? EditMode.Erase : EditMode.Paint;
+                        var action = new SelectTileAction(_state, editMode, tileSelection == Tileset.EmptyTile ? _state.selectedTile : tileSelection);
                         _state.History.PostAndExecuteAction(action);
                     }
                 }
@@ -225,8 +222,8 @@ public class EditorScene : Scene.Scene {
                         _state.History.PostAndExecuteAction(action);
                         break;
                     case EditMode.Erase:
-                        if(_state.Map.GetTileAt(_mouseTilePosition, _state.activeFloor) == EMPTY_TILE) break;
-                        var eraseAction = new SetTileAction(_state.Map, _mouseTilePosition, _state.activeFloor, EMPTY_TILE);
+                        if(_state.Map.GetTileAt(_mouseTilePosition, _state.activeFloor) == Tileset.EmptyTile) break;
+                        var eraseAction = new SetTileAction(_state.Map, _mouseTilePosition, _state.activeFloor, Tileset.EmptyTile);
                         _state.History.PostAndExecuteAction(eraseAction);
                         break;
                     case EditMode.Select:
@@ -287,8 +284,8 @@ public class EditorScene : Scene.Scene {
         }
 
         if (_state.drawDebugWidgets) {
-            int tileWidth = _state.Map == null ? DEFAULT_TILE_SIZE : _state.Map.GetTilesetTileWidth();
-            int tileHeight = _state.Map == null ? DEFAULT_TILE_SIZE : _state.Map.GetTilesetTileHeight();
+            int tileWidth = _state.Map == null ? Tileset.DefaultTileSize : _state.Map.GetTilesetTileWidth();
+            int tileHeight = _state.Map == null ? Tileset.DefaultTileSize : _state.Map.GetTilesetTileHeight();
 
             _batch.Draw(_debugCameraTargetPositionTexture, _camera.TargetPosition - new Vector2(tileWidth / 2, tileHeight / 2), Color.White);
             _batch.Draw(_debugCameraPositionTexture, _camera.Position - new Vector2(tileWidth / 2, tileHeight / 2), Color.White);

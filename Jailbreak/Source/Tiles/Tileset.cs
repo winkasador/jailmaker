@@ -6,6 +6,10 @@ namespace Jailbreak.Data;
 
 public class Tileset {
 
+    public const int DefaultTileSize = 16;
+    public const int EmptyTile = 0;
+    public const int InvalidTile = -1;
+
     private string _id;
     private bool _isCustom;
     private string _texturePath;
