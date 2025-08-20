@@ -13,6 +13,7 @@ using Myra.Graphics2D.UI.File;
 using Serilog;
 using System.Collections.Generic;
 using Jailbreak.Render;
+using Jailbreak.Editor.Command;
 
 namespace Jailbreak.Editor;
 
@@ -61,6 +62,8 @@ public class EditorScene : Scene.Scene {
 
 
     private EditorMapPropertiesWindow _propertiesWindow;
+
+    private CommandRegistry _commandRegistry;
     private FileDialog _openFileDialog;
 
     // Menubar
@@ -95,6 +98,8 @@ public class EditorScene : Scene.Scene {
         _backgroundColor = new Color(19, 20, 19);
         _background = new SolidColorBackground(Game.GraphicsDevice, _backgroundColor);
 
+        _commandRegistry = new CommandRegistry();
+
         _mapLoader = new MapLoader();
         _state.selection = Rectangle.Empty;
 
@@ -108,17 +113,24 @@ public class EditorScene : Scene.Scene {
 
         CreateWindows();
 
+        _menubar = new EditorMenuBar(services, this, _commandRegistry);
+        _desktop.Widgets.Add(_menubar);
+
         _inputManager.Desktop = _desktop;
 
-        CreateMenuBar();
+        //CreateMenuBar();
         UpdateWindowTitle();
         SetMapSpecificMenuItems(false);
     }
 
+    [Obsolete]
     private void CreateMenuBar() {
+        _desktop.Widgets.Add(_menubar);
+
         _mapSpecificMenuItems = new List<string>();
 
         _menubar = new HorizontalMenu();
+        
 
         // File Menu
         MenuItem fileMenu = new MenuItem("file", "File");
@@ -601,7 +613,10 @@ public class EditorScene : Scene.Scene {
     /// <summary>
     /// Enable or disable commands in the menu bar that require a map to be loaded.
     /// </summary>
+    [Obsolete]
     public void SetMapSpecificMenuItems(bool enabled) {
+        return;
+
         int count = 0;
 
         foreach (string item in _mapSpecificMenuItems) {

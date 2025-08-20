@@ -6,6 +6,7 @@ using Myra.Graphics2D.UI;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using Jailbreak.Utility;
+using Jailbreak.Editor.Command;
 
 namespace Jailbreak.Editor;
 
@@ -15,9 +16,15 @@ public class EditorMenuBar : HorizontalMenu {
     private InputManager _inputManager;
     private Dictionary<ContextRequirement, MenuItem> _contextualMenuItems;
 
-    public EditorMenuBar(IServiceProvider services) {
+    private EditorScene _editor;
+    private CommandRegistry _registry;
+
+    public EditorMenuBar(IServiceProvider services, EditorScene editor, CommandRegistry registry) {
         _contextualMenuItems = new();
         _inputManager = (InputManager)services.GetRequiredService(typeof(InputManager));
+
+        _editor = editor;
+        _registry = registry;
 
         SetupFileMenu();
 
@@ -31,7 +38,7 @@ public class EditorMenuBar : HorizontalMenu {
 
         MenuItem openFileDialog = new MenuItem("editor.open_file", "Open Project...");
         openFileDialog.Selected += (s, a) => {
-            //OpenFileSelectDialog();
+            _registry.GetCommand("editor.open_file").Execute(new CommandContext(_editor));
         };
         MenuItem closeFile = new MenuItem("editor.close_file", "Close");
         closeFile.Selected += (s, a) => {
@@ -42,11 +49,11 @@ public class EditorMenuBar : HorizontalMenu {
            // Game.Exit();
         };
 
-        /*_fileMenu.Items.Add(openFileDialog);
+        _fileMenu.Items.Add(openFileDialog);
         _fileMenu.Items.Add(new MenuSeparator());
         _fileMenu.Items.Add(closeFile);
         _fileMenu.Items.Add(new MenuSeparator());
-        _fileMenu.Items.Add(exitMenuItem);*/
+        _fileMenu.Items.Add(exitMenuItem);
 
         Items.Add(_fileMenu);
     }
