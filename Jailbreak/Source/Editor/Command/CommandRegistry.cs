@@ -17,4 +17,11 @@ public class CommandRegistry {
         else return null;
     }
 
+    public enum CommandRequirement {
+        MapLoaded,
+        UndoAvailable,
+        RedoAvailable,
+        PasteAvailable
+    }
+
 }
