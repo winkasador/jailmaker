@@ -16,17 +16,17 @@ public static class EditorSoundEffects {
     public static SoundEffect PAINT_FLOOR;
     public static SoundEffect ERASE_TOOL;
 
-    public static void LoadSounds(DynamicContentManager assetManager) {
-        OPEN_MENU = assetManager.LoadContent<SoundEffect>("escapists/sound.open");
-        CLOSE_MENU = assetManager.LoadContent<SoundEffect>("escapists/sound.close");
-        ASCEND_LAYER = assetManager.LoadContent<SoundEffect>("escapists/sound.ascend_floor");
-        DESCEND_LAYER = assetManager.LoadContent<SoundEffect>("escapists/sound.descend_floor");
-        PICK_TILE = assetManager.LoadContent<SoundEffect>("escapists/sound.pickup_2");
-        NOT_ALLOWED = assetManager.LoadContent<SoundEffect>("escapists/sound.not_allowed");
+    public static void LoadSounds(DynamicContentManager content) {
+        OPEN_MENU = content.LoadContent<SoundEffect>("escapists/sound.open");
+        CLOSE_MENU = content.LoadContent<SoundEffect>("escapists/sound.close");
+        ASCEND_LAYER = content.LoadContent<SoundEffect>("escapists/sound.ascend_floor");
+        DESCEND_LAYER = content.LoadContent<SoundEffect>("escapists/sound.descend_floor");
+        PICK_TILE = content.LoadContent<SoundEffect>("escapists/sound.pickup_2");
+        NOT_ALLOWED = content.LoadContent<SoundEffect>("escapists/sound.not_allowed");
 
-        PAINT_FENCE = assetManager.LoadContent<SoundEffect>("escapists/sound.action_paint_fence");
-        PAINT_FLOOR = assetManager.LoadContent<SoundEffect>("escapists/sound.action_paint_floor");
-        ERASE_TOOL = assetManager.LoadContent<SoundEffect>("escapists/sound.action_erase");
+        PAINT_FENCE = content.LoadContent<SoundEffect>("escapists/sound.action_paint_fence");
+        PAINT_FLOOR = content.LoadContent<SoundEffect>("escapists/sound.action_paint_floor");
+        ERASE_TOOL = content.LoadContent<SoundEffect>("escapists/sound.action_erase");
     }
 
 }
