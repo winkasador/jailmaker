@@ -1,6 +1,7 @@
+using Jailbreak.Interface;
 using Myra.Graphics2D.UI;
 
-namespace Jailbreak.Interface;
+namespace Jailbreak.Editor.Interface;
 
 public class EditorMapPropertiesWindow : ToggleWindow {
 

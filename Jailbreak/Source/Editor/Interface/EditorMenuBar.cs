@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 using Jailbreak.Utility;
 using Jailbreak.Editor.Command;
 
-namespace Jailbreak.Editor;
+namespace Jailbreak.Editor.Interface;
 
 public class EditorMenuBar : HorizontalMenu {
 

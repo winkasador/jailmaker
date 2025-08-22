@@ -6,7 +6,7 @@ using Jailbreak.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Jailbreak.Editor;
+namespace Jailbreak.Editor.Interface;
 
 public class EditorDebugHUD {
 

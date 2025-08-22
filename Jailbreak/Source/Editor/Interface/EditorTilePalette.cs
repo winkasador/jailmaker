@@ -1,10 +1,9 @@
-using Jailbreak.Editor;
 using Jailbreak.Editor.History;
 using Microsoft.Xna.Framework;
 using Myra.Graphics2D;
 using Myra.Graphics2D.UI;
 
-namespace Jailbreak.Interface;
+namespace Jailbreak.Editor.Interface;
 
 public class EditorTilePalette : Widget {
 

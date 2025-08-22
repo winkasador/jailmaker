@@ -14,6 +14,7 @@ using Serilog;
 using System.Collections.Generic;
 using Jailbreak.Render;
 using Jailbreak.Editor.Command;
+using Jailbreak.Editor.Interface;
 
 namespace Jailbreak.Editor;
 
@@ -65,9 +66,6 @@ public class EditorScene : Scene.Scene {
 
     // Menubar
     private HorizontalMenu _menubar;
-
-    // Contains the IDs to menuitems which are only available when a map is currently loaded.
-    private List<string> _mapSpecificMenuItems;
 
     public EditorScene(Jailbreak game, IServiceProvider services) : base(game, services) {
         _batch = new SpriteBatch(Game.GraphicsDevice);
@@ -244,7 +242,7 @@ public class EditorScene : Scene.Scene {
         }
 
         if(_inputManager.IsKeybindingTriggered("editor.open_file")) {
-            OpenFileSelectDialog();
+            _commandRegistry.GetCommand("editor.open_file").Execute(new CommandContext(this));
         }
         if (_inputManager.IsKeybindingTriggered("editor.quit")) {
             Game.Exit();
@@ -303,6 +301,7 @@ public class EditorScene : Scene.Scene {
         _desktop.Render();
     }
 
+    // TODO: Move into a NoMapLoadedScreen class.
     public void DrawNoMapLoadedText() {
         Vector2 middle = new Vector2(
             Game.GraphicsDevice.Viewport.Width / 2f,
@@ -382,16 +381,19 @@ public class EditorScene : Scene.Scene {
         DrawCenteredText(_batch, _font, authorText, new Vector2(middle.X, yOffset), Color.Gray);
     }
 
+    // TODO: Move into a TextRenderer class.
     public void DrawCenteredText(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color color) {
         Vector2 textSize = font.MeasureString(text);
         batch.DrawString(font, text, position, color, 0f, textSize / 2f, 1f, SpriteEffects.None, 0f);
     }
 
+    // TODO: Move into a TextRenderer class.
     public void DrawRightAlignedText(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color color) {
         Vector2 textSize = font.MeasureString(text);
         batch.DrawString(font, text, position, color, 0f, textSize, 1f, SpriteEffects.None, 0f);
     }
 
+    // TODO: Move into a OpenFileDialog class.
     public void OpenFileSelectDialog() {
         if (_openFileDialog != null) return;
 
@@ -520,26 +522,6 @@ public class EditorScene : Scene.Scene {
     [Obsolete]
     public void SetMapSpecificMenuItems(bool enabled) {
         return;
-
-        int count = 0;
-
-        foreach (string item in _mapSpecificMenuItems) {
-            MenuItem menuItem = _menubar.FindMenuItemById(item);
-            if (menuItem != null) {
-                menuItem.Enabled = enabled;
-                count++;
-            }
-            else {
-                _logger.Warning($"Cannot change activity of menu item \"{item}\" because no such menu item exists.");
-            }
-        }
-
-        if (enabled) {
-            _logger.Information($"Enabled {count} menu item(s).");
-        }
-        else {
-            _logger.Information($"Disabled {count} menu item(s).");
-        }
     }
 
     public void ShowMessage(string title, string message) {
