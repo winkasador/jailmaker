@@ -40,6 +40,7 @@ public class EditorScene : Scene.Scene {
     private EditorMapRenderer _renderer;
     private EditorDebugHUD _debugHUD;
     private MapLoader _mapLoader;
+    private EditorNoMapLoadedScreen _noMapLoadedScreen;
 
     private Desktop _desktop;
     private Window _tilePaletteWindow;
@@ -97,6 +98,8 @@ public class EditorScene : Scene.Scene {
         _titleFont = Game.Content.Load<SpriteFont>("escapists/Fonts/8BitSnobbery");
 
         _debugHUD = new EditorDebugHUD(services, _font);
+
+        _noMapLoadedScreen = new EditorNoMapLoadedScreen(services, _font);
 
         EditorSoundEffects.LoadSounds(_contentManager);
         _desktop = new Desktop();
@@ -288,7 +291,7 @@ public class EditorScene : Scene.Scene {
 
         if (_state.Map == null) {
             _batch.Begin();
-            DrawNoMapLoadedText();
+            _noMapLoadedScreen.Draw(_batch);
             _batch.End();
         }
 
@@ -299,86 +302,6 @@ public class EditorScene : Scene.Scene {
         }
 
         _desktop.Render();
-    }
-
-    // TODO: Move into a NoMapLoadedScreen class.
-    public void DrawNoMapLoadedText() {
-        Vector2 middle = new Vector2(
-            Game.GraphicsDevice.Viewport.Width / 2f,
-            Game.GraphicsDevice.Viewport.Height / 2f
-        );
-
-        string line1 = "No map loaded!";
-        string line2 = "Create a New Project or Open an Existing One";
-        int width = (int)Math.Max(_font.MeasureString(line1).X, _font.MeasureString(line2).X);
-        int height = (int)(_font.MeasureString(line1).Y + _font.MeasureString(line2).Y);
-
-        Rectangle border = new Rectangle((int)(middle.X - width / 2), (int)(middle.Y - height / 2), width, height);
-        Rectangle innerBorder = border;
-        innerBorder.Inflate(8, 8);
-        Rectangle outerBorder = border;
-        outerBorder.Inflate(10, 10);
-
-        _batch.Draw(_pixelTexture, outerBorder, Color.White);
-        _batch.Draw(_pixelTexture, innerBorder, _backgroundColor);
-
-        DrawCenteredText(_batch, _font, line1, middle + new Vector2(0, -12), Color.White);
-        DrawCenteredText(_batch, _font, line2, middle + new Vector2(0, 12), Color.White);
-
-        int horizontalPadding = 8;
-        int topPadding = 48;
-        int itemMargin = 8;
-
-        DrawCenteredText(_batch, _titleFont, "JAILMAKER", new Vector2(middle.X, topPadding), Color.LightGray);
-
-        // OFFICIAL PRISONS
-
-        string[] prisons = ["Tutorial", "Centre Perks", "Stalag Flucht", "Shankton State Pen", "Jungle Compound", "San Pancho", "HMP Irongate"];
-
-        int yOffset = topPadding;
-        string officialPrisons = "Official Prisons";
-        DrawRightAlignedText(_batch, _font, officialPrisons, new Vector2(Game.GraphicsDevice.Viewport.Width - horizontalPadding, yOffset), Color.LightGray);
-        yOffset += (int)_font.MeasureString(officialPrisons).Y + itemMargin;
-
-        foreach (string prison in prisons) {
-            DrawRightAlignedText(_batch, _font, prison, new Vector2(Game.GraphicsDevice.Viewport.Width - horizontalPadding, yOffset), Color.Gray);
-            yOffset += (int)_font.MeasureString(prison).Y + itemMargin;
-        }
-
-        yOffset += (int)_font.MeasureString("C").Y + itemMargin;
-
-        // BONUS PRISONS
-
-        string[] bonusPrisons = ["Alcatraz", "Banned Camp", "Camp Epsilon", "Duck Tapes Are Forever", "Escape Team", "Fhurst Peak", "Fort Bamford", "Jingle Cells", "Paris Central Pen", "Santa's Sweatshop", "Tower of London"];
-
-        string bonusPrisonsTitle = "Bonus Prisons";
-        DrawRightAlignedText(_batch, _font, bonusPrisonsTitle, new Vector2(Game.GraphicsDevice.Viewport.Width - horizontalPadding, yOffset), Color.LightGray);
-        yOffset += (int)_font.MeasureString(bonusPrisonsTitle).Y + itemMargin;
-
-        foreach (string prison in bonusPrisons) {
-            DrawRightAlignedText(_batch, _font, prison, new Vector2(Game.GraphicsDevice.Viewport.Width - horizontalPadding, yOffset), Color.Gray);
-            yOffset += (int)_font.MeasureString(prison).Y + itemMargin;
-        }
-
-        yOffset += (int)_font.MeasureString("C").Y + itemMargin;
-
-        // CUSTOM PRISONS
-
-        string customPrisonsTitle = "Custom Prisons";
-        DrawRightAlignedText(_batch, _font, customPrisonsTitle, new Vector2(Game.GraphicsDevice.Viewport.Width - horizontalPadding, yOffset), Color.LightGray);
-        yOffset += (int)_font.MeasureString(customPrisonsTitle).Y + itemMargin;
-
-        DrawRightAlignedText(_batch, _font, "(No custom maps installed.)", new Vector2(Game.GraphicsDevice.Viewport.Width - horizontalPadding, yOffset), Color.Gray);
-
-        yOffset = (int)(middle.Y * 2 - _font.MeasureString("C").Y / 2 - 6);
-
-        string attribution = "The Escapists and Included Assets (c) Mouldy Toof Studios and Team17 Digital Ltd.";
-        DrawCenteredText(_batch, _font, attribution, new Vector2(middle.X, yOffset), Color.Gray);
-
-        yOffset -= (int)_font.MeasureString(attribution).Y + 6;
-
-        string authorText = "~ A Winkassador! Product ~";
-        DrawCenteredText(_batch, _font, authorText, new Vector2(middle.X, yOffset), Color.Gray);
     }
 
     // TODO: Move into a TextRenderer class.
