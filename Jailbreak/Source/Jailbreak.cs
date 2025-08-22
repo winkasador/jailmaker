@@ -56,7 +56,9 @@ public class Jailbreak : Game {
             .CreateLogger();
 
         _logger = Log.ForContext<Jailbreak>();
+        _logger.Information("Starting Jailbreak.");
 
+        _logger.Information("Creating Performance Monitoring Service...");
         _performance = new Performance(this, _graphics);
 
         var deserializer = new DeserializerBuilder()
@@ -76,6 +78,7 @@ public class Jailbreak : Game {
 
         base.Initialize();
 
+        _logger.Information("Creating Scene Manager Service...");
         _sceneManager = new SceneManager(this);
 
         _modManager = new ModManager(this);
@@ -99,6 +102,7 @@ public class Jailbreak : Game {
     }
 
     public void FinishInitialization() {
+        _logger.Information("Creating Content Manager Service...");
         _contentManager = new DynamicContentManager(this, _modManager);
         _contentManager.AddFilePathMacro("Content|", _modManager.ActiveMod.GetBasePath());
         foreach (var kvp in Mod.Macros) {
@@ -115,6 +119,7 @@ public class Jailbreak : Game {
         _inputManager = new InputManager();
         _inputManager.Game = this;
 
+        _logger.Information("Building Service Provider...");
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddSingleton(this);
         serviceCollection.AddSingleton(_inputManager);
@@ -126,9 +131,9 @@ public class Jailbreak : Game {
 
         _isInitialized = true;
 
-        _sceneManager.ChangeScene(new EditorScene(this, _services));
-
         _logger.Information("Finished Initializing.");
+
+        _sceneManager.ChangeScene(new EditorScene(this, _services));
     }
 
     private void LoadBootstrapScene() {
@@ -174,6 +179,8 @@ public class Jailbreak : Game {
         if (_isInitialized) {
             _contentManager.Dispose();
         }
+
+        _logger.Information("Shutting Down.");
 
         Log.CloseAndFlush();
 
