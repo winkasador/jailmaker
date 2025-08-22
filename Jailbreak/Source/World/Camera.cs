@@ -7,6 +7,8 @@ public class Camera {
     
     private float _zoom;
     private float _smoothRate;
+    private bool _smoothingEnabled;
+    private float _smoothingSnapThreshold;
     private Vector2 _position;
     private Vector2 _targetPosition;
     private Viewport _viewport;
@@ -14,6 +16,8 @@ public class Camera {
 
     public Camera(Viewport viewport) {
         _zoom = 1.0f;
+        _smoothingEnabled = true;
+        _smoothingSnapThreshold = 0.5f;
         _smoothRate = 6f;
         _position = Vector2.Zero;
         _targetPosition = Vector2.Zero;
@@ -28,6 +32,16 @@ public class Camera {
     public float SmoothRate {
         get => _smoothRate;
         set => _smoothRate = value;
+    }
+
+    public bool SmoothingEnabled {
+        get => _smoothingEnabled;
+        set => _smoothingEnabled = value;
+    }
+
+    public float SmoothingSnapThreshold {
+        get => _smoothingSnapThreshold;
+        set => _smoothingSnapThreshold = value;
     }
 
     public Vector2 Position {
@@ -56,7 +70,15 @@ public class Camera {
     }
 
     public void MoveToTarget(float deltaTime) {
-        _position = Vector2.Lerp(_position, _targetPosition, _smoothRate * deltaTime);
+        if (!_smoothingEnabled) {
+            _position = _targetPosition;
+        }
+        else {
+            if ((_targetPosition - _position).LengthSquared() < _smoothingSnapThreshold * _smoothingSnapThreshold) {
+                _position = _targetPosition;
+            }
+            else _position = Vector2.Lerp(_position, _targetPosition, _smoothRate * deltaTime);
+        }
     }
 
     public void SnapTo(Vector2 position) {
