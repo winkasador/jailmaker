@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Jailbreak.Content;
+using Jailbreak.Data;
 using Jailbreak.Utility;
 using Jailbreak.World;
 using Microsoft.Xna.Framework;
@@ -8,9 +9,6 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Jailbreak.Render;
 
 public class MapRenderer {
-
-    protected const int TILE_SIZE = 16;
-    protected const int EMPTY_TILE = 0;
 
     protected const int SHADOW_NONE = 0;
     protected const int SHADOW_FULL = 1;
@@ -52,7 +50,7 @@ public class MapRenderer {
         set {
             _tilesetTexture = value;
             TilesetUtil.ReplaceColors(_tilesetTexture, Color.White, Color.Transparent);
-            _tileTextures = TilesetUtil.AtlasToTextureList(TilesetTexture, _graphicsDevice, TILE_SIZE, TILE_SIZE);
+            _tileTextures = TilesetUtil.AtlasToTextureList(TilesetTexture, _graphicsDevice, Tileset.DefaultTileSize, Tileset.DefaultTileSize);
         }
     }
 
@@ -71,7 +69,7 @@ public class MapRenderer {
     }
 
     public virtual void RenderLayer(SpriteBatch batch, Map map, int layer) {
-        Rectangle drawArea = new Rectangle(0, 0, map.Width * TILE_SIZE, map.Height * TILE_SIZE);
+        Rectangle drawArea = new Rectangle(0, 0, map.Width * Tileset.DefaultTileSize, map.Height * Tileset.DefaultTileSize);
         if(layer == 0)
             batch.Draw(_undergroundTexture, drawArea, drawArea, new Color(255, 255, 255, 150));
         else if(layer == 1)
@@ -84,19 +82,19 @@ public class MapRenderer {
         for(int y = 0; y < map.Height; y++) {
             for(int x = 0; x < map.Width; x++) {
                 int tile = tiles[y,x];
-                if(tile != EMPTY_TILE) {
+                if(tile != Tileset.EmptyTile) {
                     if(tile <= 0 || tile > _tileTextures.Count) {
-                        batch.Draw(_pixelTexture, new Rectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE), new Color(255, 255, 255, tile * 2));
+                        batch.Draw(_pixelTexture, new Rectangle(x * Tileset.DefaultTileSize, y * Tileset.DefaultTileSize, Tileset.DefaultTileSize, Tileset.DefaultTileSize), new Color(255, 255, 255, tile * 2));
                     }
                     else {
-                        batch.Draw(_tileTextures[tile - 1], new Rectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE), Color.White);
+                        batch.Draw(_tileTextures[tile - 1], new Rectangle(x * Tileset.DefaultTileSize, y * Tileset.DefaultTileSize, Tileset.DefaultTileSize, Tileset.DefaultTileSize), Color.White);
                     }
                 }
 
                 if(map.ShadowMap.ContainsKey(layer)) {
                     var shadowType = map.ShadowMap[layer][y][x];
                     if(shadowType != SHADOW_NONE) {
-                        batch.Draw(_shadowTextures[shadowType - 1], new Rectangle(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE), _shadowColor);
+                        batch.Draw(_shadowTextures[shadowType - 1], new Rectangle(x * Tileset.DefaultTileSize, y * Tileset.DefaultTileSize, Tileset.DefaultTileSize, Tileset.DefaultTileSize), _shadowColor);
                     }
                 }                
             }

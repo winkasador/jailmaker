@@ -1,5 +1,6 @@
 using System;
 using Jailbreak.Content;
+using Jailbreak.Data;
 using Jailbreak.Render;
 using Jailbreak.World;
 using Microsoft.Xna.Framework;
@@ -43,11 +44,11 @@ public class EditorMapRenderer : MapRenderer {
     }
 
     public void DrawGrid(SpriteBatch batch, Map map, int cellWidth, int cellHeight) {
-        for (int x = 0; x <= (map.Width - 1) * TILE_SIZE; x += cellWidth) {
-            batch.Draw(_pixelTexture, new Rectangle(x, 0, 1, map.Height * TILE_SIZE), new Color(80, 80, 80, 100));
+        for (int x = 0; x <= (map.Width - 1) * Tileset.DefaultTileSize; x += cellWidth) {
+            batch.Draw(_pixelTexture, new Rectangle(x, 0, 1, map.Height * Tileset.DefaultTileSize), new Color(80, 80, 80, 100));
         }
-        for (int y = 0; y <= (map.Height - 1) * TILE_SIZE; y += cellHeight) {
-            batch.Draw(_pixelTexture, new Rectangle(0, y, map.Width * TILE_SIZE, 1), new Color(80, 80, 80, 100));
+        for (int y = 0; y <= (map.Height - 1) * Tileset.DefaultTileSize; y += cellHeight) {
+            batch.Draw(_pixelTexture, new Rectangle(0, y, map.Width * Tileset.DefaultTileSize, 1), new Color(80, 80, 80, 100));
         }
     }
 
@@ -77,7 +78,7 @@ public class EditorMapRenderer : MapRenderer {
         for(int y = 0; y < map.Height; y++) {
             for(int x = 0; x < map.Width; x++) {
                 int tile = tiles[y,x];
-                if(tile != EMPTY_TILE && map.TilesetData.Tiles[tile - 1].CastsShadow) {
+                if(tile != Tileset.EmptyTile && map.TilesetData.Tiles[tile - 1].CastsShadow) {
                     batch.Draw(_pixelTexture, new Rectangle(x * 16, y * 16, 16, 16), _debugShadowCaster);
                 }
                 else {
