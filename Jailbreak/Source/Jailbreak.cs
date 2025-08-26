@@ -76,7 +76,7 @@ public class Jailbreak : Game {
 
         var mods = _modManager.InstalledMods;
 
-        if (true || mods.Count == 0) {
+        if (mods.Count == 0) {
             LaunchBootstrapSequence();
             return;
         }
