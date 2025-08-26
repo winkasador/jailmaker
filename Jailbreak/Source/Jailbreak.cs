@@ -75,12 +75,13 @@ public class Jailbreak : Game {
         _contentManager = new DynamicContentManager(this, _modManager);
 
         var mods = _modManager.InstalledMods;
+        int modCount = _modManager.GetModCount();
 
-        if (mods.Count == 0) {
+        if (modCount == 0) {
             LaunchBootstrapSequence();
             return;
         }
-        else if (mods.Count == 1) {
+        else if (modCount == 1) {
             _modManager.SelectMod(mods.First().Key);
             _mod = _modManager.ActiveMod;
         }

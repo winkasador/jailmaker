@@ -8,8 +8,7 @@ using YamlDotNet.Serialization;
 
 namespace Jailbreak.Mod;
 
-public class ModManager(Jailbreak jailbreak)
-{
+public class ModManager(Jailbreak jailbreak) {
 
     private readonly ILogger _logger = Log.ForContext<ModManager>();
 
@@ -25,15 +24,15 @@ public class ModManager(Jailbreak jailbreak)
             .WithNamingConvention(YamlDotNet.Serialization.NamingConventions.UnderscoredNamingConvention.Instance)
             .Build();
 
-        foreach(string path in Directory.GetDirectories(jailbreak.Content.RootDirectory)) {
-            if(File.Exists($"{path}/manifest.yml") || File.Exists($"{path}/manifest.yaml")) {
+        foreach (string path in Directory.GetDirectories(jailbreak.Content.RootDirectory)) {
+            if (File.Exists($"{path}/manifest.yml") || File.Exists($"{path}/manifest.yaml")) {
                 string targetFile = File.Exists($"{path}/manifest.yml") ? $"{path}/manifest.yml" : $"{path}/manifest.yaml";
                 _logger.Information($"Attempting to read mod manifest: {targetFile}.");
                 string yaml = File.ReadAllText(targetFile);
 
                 try {
                     ModDto mod = deserializer.Deserialize<ModDto>(yaml);
-                    if(InstalledMods.ContainsKey(mod.Id)) {
+                    if (InstalledMods.ContainsKey(mod.Id)) {
                         _logger.Error($"Failed to load mod '{targetFile}': A mod with the id '{mod.Id}' is already loaded,");
                         continue;
                     }
@@ -41,7 +40,7 @@ public class ModManager(Jailbreak jailbreak)
                     _logger.Information($"Loaded Mod '{mod.Id}' at {targetFile}.");
                     InstalledMods.Add(mod.Id, mod.ToModDefinition());
                 }
-                catch(YamlException e) {
+                catch (YamlException e) {
                     _logger.Error(e, $"Failed to load mod '{targetFile}'.");
                 }
             }
@@ -54,7 +53,7 @@ public class ModManager(Jailbreak jailbreak)
     /// <param name="id">The string id of the mod to use as found in manifest.yml.</param>
     /// <returns>The actual instance of the selected mod definition</returns>
     public ModDefinition SelectMod(string id) {
-        if(!InstalledMods.TryGetValue(id, out var mod)) {
+        if (!InstalledMods.TryGetValue(id, out var mod)) {
             _logger.Error($"Failed to initialize mod '{id}': Mod with the specified ID is not installed.");
             return null;
         }
@@ -64,6 +63,14 @@ public class ModManager(Jailbreak jailbreak)
         _logger.Information($"Selected Mod '{ActiveMod.Id}' by '{ActiveMod.Authors[0].Name}'.");
 
         return ActiveMod;
+    }
+
+    public int GetModCount() {
+        int count = 0;
+        foreach (var kvp in InstalledMods) {
+            if (kvp.Value.Type == ModDefinition.ModType.Mod) count++;
+        }
+        return count;
     }
 
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using static Jailbreak.Content.ModDefinition;
 
 namespace Jailbreak.Content;
 
@@ -9,22 +10,25 @@ namespace Jailbreak.Content;
 /// </summary>
 public class ModDefinition(
     string id,
+    ModType type,
     List<CreditedUser> authors,
     List<CreditedUser> credits,
     Dictionary<string, string> macros) {
-    
+
     public string Id { get; } = id;
-    
+
+    public ModType Type { get; } = type;
+
     /// <summary>
     /// List of people who worked on this mod.
     /// </summary>
     public List<CreditedUser> Authors { get; } = authors;
-    
+
     /// <summary>
     /// List of people whose work was used in this mod.
     /// </summary>
     public List<CreditedUser> Credits { get; } = credits;
-    
+
     /// <summary>
     /// Custom macros which shorten file paths.
     /// Content| is a macro and will resolve to /Content/{mod_name}/.
@@ -33,6 +37,11 @@ public class ModDefinition(
 
     public string GetBasePath() {
         return $"./Content/{Id}/";
+    }
+
+    public enum ModType {
+        Mod,
+        Utility
     }
 
 }
