@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Jailbreak.Content;
 using Jailbreak.Editor;
@@ -7,9 +6,6 @@ using Jailbreak.Input;
 using Jailbreak.Scene;
 using Microsoft.Xna.Framework;
 using Myra;
-using YamlDotNet.Serialization;
-using System.IO;
-using Jailbreak.Data.Dto;
 using Jailbreak.Mod;
 using System.Linq;
 using Jailbreak.Content.Handler;
@@ -28,7 +24,7 @@ public class Jailbreak : Game {
     private InputManager _inputManager;
 
     private ModManager _modManager;
-    private DynamicContentManager _contentManager;
+    public DynamicContentManager _contentManager;
     private Performance _performance;
 
     private IServiceProvider _services;
@@ -54,22 +50,13 @@ public class Jailbreak : Game {
             .WriteTo.File("./logs/log.txt")
             .MinimumLevel.Debug()
             .CreateLogger();
-
+    
         _logger = Log.ForContext<Jailbreak>();
         _logger.Information("Starting Jailbreak.");
 
         _logger.Information("Creating Performance Monitoring Service...");
         _performance = new Performance(this, _graphics);
-
-        var deserializer = new DeserializerBuilder()
-            .IgnoreUnmatchedProperties()
-            .WithNamingConvention(YamlDotNet.Serialization.NamingConventions.UnderscoredNamingConvention.Instance)
-            .Build();
-
-        var yaml = File.ReadAllText("./Content/escapists/Manifest.yaml");
-        var dto = deserializer.Deserialize<ModDto>(yaml);
-        _mod = dto.ToModDefinition();
-
+        
         _graphics.PreferredBackBufferWidth = (int)(1920 / 1.2);
         _graphics.PreferredBackBufferHeight = (int)(1080 / 1.2);
         _graphics.SynchronizeWithVerticalRetrace = true;
@@ -84,17 +71,21 @@ public class Jailbreak : Game {
         _modManager = new ModManager(this);
         _modManager.DiscoverMods();
 
+        _logger.Information("Creating Content Manager Service...");
+        _contentManager = new DynamicContentManager(this, _modManager);
+
         var mods = _modManager.InstalledMods;
 
-        if (mods.Count == 0) {
-            LoadBootstrapScene();
+        if (true || mods.Count == 0) {
+            LaunchBootstrapSequence();
             return;
         }
         else if (mods.Count == 1) {
             _modManager.SelectMod(mods.First().Key);
+            _mod = _modManager.ActiveMod;
         }
         else {
-            LoadBootstrapScene();
+            LaunchBootstrapSequence();
             return;
         }
 
@@ -102,8 +93,6 @@ public class Jailbreak : Game {
     }
 
     public void FinishInitialization() {
-        _logger.Information("Creating Content Manager Service...");
-        _contentManager = new DynamicContentManager(this, _modManager);
         _contentManager.AddFilePathMacro("Content|", _modManager.ActiveMod.GetBasePath());
         foreach (var kvp in Mod.Macros) {
             _contentManager.AddFilePathMacro(kvp.Key + "|", kvp.Value);
@@ -136,7 +125,12 @@ public class Jailbreak : Game {
         _sceneManager.ChangeScene(new EditorScene(this, _services));
     }
 
-    private void LoadBootstrapScene() {
+    private void LaunchBootstrapSequence() {
+        ModDefinition bootstrapMod = _modManager.InstalledMods["_bootstrap"];
+        _contentManager.AddFilePathMacro("Bootstrap|", bootstrapMod.GetBasePath());
+        _contentManager.RegisterContentType("Bootstrap|Textures/", "image", new Texture2DContentHandler(GraphicsDevice, _contentManager));
+        _contentManager.DiscoverContent(bootstrapMod);
+
         _sceneManager.ChangeScene(new BootstrapScene(this));
     }
 

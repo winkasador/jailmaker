@@ -9,3 +9,10 @@ credits:
 
 macros:
   Escapists: C:/Program Files (x86)/Steam/steamapps/common/The Escapists/Data/
+
+roles:
+  general_font: Fonts/Escapists
+  editor_keybidings: bindings.editor
+  editor_camera_position_hint: image.camera_position_hint
+  editor_camera_target_hint: image.camera_target_hint
+  editor_title_font: Fonts/8BitSnobbery

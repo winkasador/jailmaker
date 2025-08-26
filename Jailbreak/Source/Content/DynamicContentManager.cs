@@ -96,6 +96,7 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager)
 
     public void AddFilePathMacro(string macro, string path) {
         _filepathMacros.Add(macro, path);
+        _logger.Information($"Registered file path macro '{macro}' for the path {path}.");
     }
 
     public void DiscoverContent(ModDefinition activeMod) {
