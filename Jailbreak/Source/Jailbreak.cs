@@ -127,9 +127,9 @@ public class Jailbreak : Game {
     }
 
     private void LaunchBootstrapSequence() {
-        ModDefinition bootstrapMod = _modManager.InstalledMods["_bootstrap"];
-        _contentManager.AddFilePathMacro("Bootstrap|", bootstrapMod.GetBasePath());
-        _contentManager.RegisterContentType("Bootstrap|Textures/", "image", new Texture2DContentHandler(GraphicsDevice, _contentManager));
+        ModDefinition bootstrapMod = _modManager.InstalledMods["_global"];
+        _contentManager.AddFilePathMacro("Global|", bootstrapMod.GetBasePath());
+        _contentManager.RegisterContentType("Global|Textures/", "image", new Texture2DContentHandler(GraphicsDevice, _contentManager));
         _contentManager.DiscoverContent(bootstrapMod);
 
         _sceneManager.ChangeScene(new BootstrapScene(this));

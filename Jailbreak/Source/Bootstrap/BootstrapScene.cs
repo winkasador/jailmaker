@@ -15,7 +15,7 @@ public class BootstrapScene : Scene.Scene {
         _batch = new SpriteBatch(Game.GraphicsDevice);
         _font = Game.Content.Load<SpriteFont>("escapists/Fonts/Escapists");
 
-        _errorBackdropImage = game._contentManager.GetContent<Texture2D>("_bootstrap/image.error");
+        _errorBackdropImage = game._contentManager.GetContent<Texture2D>("_global/image.error");
     }
 
     public override void Draw(float deltaTime) {
