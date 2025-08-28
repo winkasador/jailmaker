@@ -10,6 +10,7 @@ public class ModDto {
     public List<CreditedUser> Authors { get; set; }
     public List<CreditedUser> Credits { get; set;}
     public Dictionary<string, string> Macros { get; set;}
+    public Dictionary<string, List<string>> Content { get; set; }
 
     public ModDefinition ToModDefinition() {
         ModDefinition.ModType typeEnum;
@@ -25,7 +26,7 @@ public class ModDto {
                 break;
         }
 
-        return new ModDefinition(Id, typeEnum, Authors, Credits, Macros);
+        return new ModDefinition(Id, typeEnum, Authors, Credits, Macros, Content);
     }
 
 }

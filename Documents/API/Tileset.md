@@ -1,10 +1,10 @@
 # Tileset
-
 | Property | Type | Description | Default Value |
 | - | - | - | - |
 | id | String | The Content ID of this tileset. | |
 | texture_path | Content Path | Where the texture to this Tileset can be found. | |
-| tile_count | String | How many tiles this tileset has. | 100 |
+| custom | Boolean | Can this tileset be used in custom maps? | false
+| tile_count | Integer | How many tiles this tileset has. | 100 |
 | tile_size | Vector 2 | The width and height of each tile within this set. | 16, 16 |
 | editor_groups | Dictionary | Groups sof related tiles which can be cycled through in the map editor for convenience. (I.e, all wall corners are in their own group so you can quickly tab to switch through them). | |
 | tiles | Array | A list of the data for each tile. (See below) | |

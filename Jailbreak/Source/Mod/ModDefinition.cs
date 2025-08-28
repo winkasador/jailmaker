@@ -13,7 +13,8 @@ public class ModDefinition(
     ModType type,
     List<CreditedUser> authors,
     List<CreditedUser> credits,
-    Dictionary<string, string> macros) {
+    Dictionary<string, string> macros,
+    Dictionary<string, List<string>> contentLocations) {
 
     public string Id { get; } = id;
 
@@ -34,6 +35,15 @@ public class ModDefinition(
     /// Content| is a macro and will resolve to /Content/{mod_name}/.
     /// </summary>
     public Dictionary<string, string> Macros { get; } = macros;
+
+    public Dictionary<string, List<string>> ContentLocations = contentLocations;
+
+    public List<string> GetContentLocationsFor(string contentType) {
+        if (ContentLocations.TryGetValue(contentType, out var content)) {
+            return content;
+        }
+        else return new List<string>();
+    }
 
     public string GetBasePath() {
         return $"./Content/{Id}/";

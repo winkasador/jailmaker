@@ -10,6 +10,12 @@ credits:
 macros:
   Escapists: C:/Program Files (x86)/Steam/steamapps/common/The Escapists/Data/
 
+content:
+  tileset: [Content|Data/Tilesets]
+  image: [Content|Data/Textures]
+  sounds: [Content|Data/Sounds]
+  bindings: [Content|Data/Bindings]
+
 roles:
   general_font: Fonts/Escapists
   editor_keybidings: bindings.editor
