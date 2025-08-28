@@ -99,10 +99,10 @@ public class Jailbreak : Game {
             _contentManager.AddFilePathMacro(kvp.Key + "|", kvp.Value);
         }
 
-        _contentManager.RegisterContentType(_mod.GetContentLocationsFor("tileset")[0], "tileset", new TilesetContentHandler(_contentManager));
-        _contentManager.RegisterContentType(_mod.GetContentLocationsFor("image")[0], "image", new Texture2DContentHandler(GraphicsDevice, _contentManager));
-       // _contentManager.RegisterContentType(_mod.GetContentLocationsFor("sound")[0], "sound", new SoundEffectContentHandler(_contentManager));
-        _contentManager.RegisterContentType(_mod.GetContentLocationsFor("bindings")[0], "bindings", new KeybindingsHandler(_contentManager));
+        _contentManager.RegisterContentType(_mod.GetContentLocationsFor("tileset"), "tileset", new TilesetContentHandler(_contentManager));
+        _contentManager.RegisterContentType(_mod.GetContentLocationsFor("image"), "image", new Texture2DContentHandler(GraphicsDevice, _contentManager));
+        _contentManager.RegisterContentType(_mod.GetContentLocationsFor("sound"), "sound", new SoundEffectContentHandler(_contentManager));
+        _contentManager.RegisterContentType(_mod.GetContentLocationsFor("bindings"), "bindings", new KeybindingsHandler(_contentManager));
 
         _contentManager.DiscoverContent(_modManager.ActiveMod);
 

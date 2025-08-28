@@ -145,6 +145,23 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager)
         _contentHandlers[type] = handler;
     }
 
+    public void RegisterContentType<T>(List<string> directories, string typeName, IContentHandler<T> handler) {
+        var type = typeof(T);
+        if(_contentHandlers.ContainsKey(type)) {
+            _logger.Error($"Failed to register Content Handler: a Handler for '{type}' already exists.");
+            return;
+        }
+
+        foreach (string directory in directories) {
+            _contentDiscoveryPaths.Add(type, directory);
+            _logger.Information($"Registering Content Handler '{handler}' for '{typeName}' in '{directory}'.");
+        }
+        _content.Add(type, new());
+        _typeNames.Add(type, typeName);
+
+        _contentHandlers[type] = handler;
+    }
+
     public string ResolveFilePath(string path) {
         return _filepathMacros.Aggregate(path, (current, kvp) => current.Replace(kvp.Key, kvp.Value));
     }
