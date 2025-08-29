@@ -55,7 +55,7 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager)
         if(!_contentPredicates.ContainsKey(id)) {
             _logger.Error($"Failed to get content '{id}' because it does not exist.");
         }
-        else if(!(_contentPredicates[id].DataType is T)) {
+        else if(_contentPredicates[id].DataType != typeof(T)) {
             _logger.Error($"Failed to get content '{id}' because it is the wrong type (Expected '{type}', got '{_contentPredicates[id].DataType}').");
         }
 
