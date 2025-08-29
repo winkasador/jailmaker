@@ -18,7 +18,7 @@ public class Texture2DContentHandler : IContentHandler<Texture2D> {
     }
 
     public Texture2D Handle(byte[] bytes) {
-        var yaml = System.Text.Encoding.Default.GetString(bytes);
+        var yaml = System.Text.Encoding.UTF8.GetString(bytes);
         
         ImageReference imageDto = _contentManager.GetDeserializer().Deserialize<ImageReference>(yaml);
         string path = _contentManager.ResolveFilePath(imageDto.Path);

@@ -15,7 +15,7 @@ public class KeybindingsHandler : IContentHandler<List<KeyBinding>> {
     public List<KeyBinding> Handle(byte[] data) {
         List<KeyBinding> bindings = new();
 
-        var yaml = System.Text.Encoding.Default.GetString(data);
+        var yaml = System.Text.Encoding.UTF8.GetString(data);
 
         var bindingDtos = _contentManager.GetDeserializer().Deserialize<Dictionary<string, KeyBindingDto>>(yaml);
         foreach(var kvp in bindingDtos) {

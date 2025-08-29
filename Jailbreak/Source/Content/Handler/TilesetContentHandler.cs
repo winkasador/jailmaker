@@ -12,7 +12,7 @@ public class TilesetContentHandler : IContentHandler<Tileset> {
     }
 
     public Tileset Handle(byte[] bytes) {
-        var yaml = System.Text.Encoding.Default.GetString(bytes);
+        var yaml = System.Text.Encoding.UTF8.GetString(bytes);
         TilesetDto dto = _contentManager.GetDeserializer().Deserialize<TilesetDto>(yaml);
         return dto.ToTileset(_contentManager);
     }

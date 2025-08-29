@@ -15,7 +15,7 @@ public class SoundEffectContentHandler : IContentHandler<SoundEffect> {
     }
 
     public SoundEffect Handle(byte[] data) {
-        var yaml = System.Text.Encoding.Default.GetString(data);
+        var yaml = System.Text.Encoding.UTF8.GetString(data);
         
         SoundReference soundRef = _contentManager.GetDeserializer().Deserialize<SoundReference>(yaml);
         string path = _contentManager.ResolveFilePath(soundRef.Path);
