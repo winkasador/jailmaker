@@ -19,9 +19,24 @@ public class EditorMenuBar : HorizontalMenu {
     private EditorScene _editor;
     private CommandRegistry _registry;
 
+    [Obsolete]
     public EditorMenuBar(IServiceProvider services, EditorScene editor, CommandRegistry registry) {
         _contextualMenuItems = new();
         _inputManager = (InputManager)services.GetRequiredService(typeof(InputManager));
+
+        _editor = editor;
+        _registry = registry;
+
+        SetupFileMenu();
+
+        foreach (MenuItem item in MenuHelper.GetAllMenuItems(this)) {
+            AddShortcutInformation(item);
+        }
+    }
+
+    public EditorMenuBar(EditorScene editor, InputManager inputManager, CommandRegistry registry) {
+        _contextualMenuItems = new();
+        _inputManager = inputManager;
 
         _editor = editor;
         _registry = registry;
@@ -46,7 +61,7 @@ public class EditorMenuBar : HorizontalMenu {
         };
         MenuItem exitMenuItem = new MenuItem("editor.quit", "Quit");
         exitMenuItem.Selected += (s, a) => {
-           // Game.Exit();
+            // Game.Exit();
         };
 
         _fileMenu.Items.Add(openFileDialog);

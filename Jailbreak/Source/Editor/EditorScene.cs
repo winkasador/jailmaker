@@ -106,7 +106,7 @@ public class EditorScene : Scene.Scene {
 
         CreateWindows();
 
-        _menubar = new EditorMenuBar(services, this, _commandRegistry);
+        _menubar = new EditorMenuBar(this, _inputManager, _commandRegistry);
         _desktop.Widgets.Add(_menubar);
 
         _inputManager.Desktop = _desktop;
