@@ -203,9 +203,11 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager)
 
     public void Dispose() {
         _logger.Information($"Disposing All Content.");
-        foreach(var entry in _content.Values) {
-            if(entry is IDisposable disposable) {
-                disposable.Dispose();
+        foreach(var type in _content.Values) {
+            foreach (var entry in type.Values) {
+                if (entry is IDisposable disposable) {
+                    disposable.Dispose();
+                }
             }
         }
     }
