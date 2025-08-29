@@ -5,6 +5,7 @@ using System.Linq;
 using Jailbreak.Content.Handler;
 using Jailbreak.Data;
 using Jailbreak.Mod;
+using Microsoft.Xna.Framework.Graphics;
 using Serilog;
 using YamlDotNet.Core;
 using YamlDotNet.Serialization;
@@ -130,9 +131,23 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager)
         _logger.Information($"Total of {_contentPredicates.Count:n0} content predicates discovered.");
     }
 
+    public void RegisterMod(ModDefinition mod, GraphicsDevice device) {
+        AddFilePathMacro("Content|", mod.GetBasePath());
+        foreach (var kvp in mod.Macros) {
+            AddFilePathMacro(kvp.Key + "|", kvp.Value);
+        }
+
+        RegisterContentType(mod.GetContentLocationsFor("tileset"), "tileset", new TilesetContentHandler(this));
+        RegisterContentType(mod.GetContentLocationsFor("image"), "image", new Texture2DContentHandler(device, this));
+        RegisterContentType(mod.GetContentLocationsFor("sound"), "sound", new SoundEffectContentHandler(this));
+        RegisterContentType(mod.GetContentLocationsFor("bindings"), "bindings", new KeybindingsHandler(this));
+
+        DiscoverContent(mod);
+    }
+
     public void RegisterContentType<T>(string directory, string typeName, IContentHandler<T> handler) {
         var type = typeof(T);
-        if(_contentHandlers.ContainsKey(type)) {
+        if (_contentHandlers.ContainsKey(type)) {
             _logger.Error($"Failed to register Content Handler: a Handler for '{type}' already exists.");
             return;
         }
