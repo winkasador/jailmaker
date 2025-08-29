@@ -99,7 +99,7 @@ public class EditorScene : Scene.Scene {
 
         _debugHUD = new EditorDebugHUD(services, _font);
 
-        _noMapLoadedScreen = new EditorNoMapLoadedScreen(services, _font);
+        _noMapLoadedScreen = new EditorNoMapLoadedScreen(Game.GraphicsDevice, _font);
 
         EditorSoundEffects.LoadSounds(_contentManager);
         _desktop = new Desktop();

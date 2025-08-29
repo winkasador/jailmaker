@@ -7,21 +7,21 @@ namespace Jailbreak.Editor.Interface;
 
 public class EditorNoMapLoadedScreen {
 
-    private Jailbreak _game;
+    private GraphicsDevice _device;
     private SpriteFont _font;
     private Texture2D _pixel;
 
-    public EditorNoMapLoadedScreen(IServiceProvider services, SpriteFont font) {
-        _game = services.GetRequiredService(typeof(Jailbreak)) as Jailbreak;
+    public EditorNoMapLoadedScreen(GraphicsDevice device, SpriteFont font) {
+        _device = device;
         _font = font;
-        _pixel = new Texture2D(_game.GraphicsDevice, 1, 1);
+        _pixel = new Texture2D(_device, 1, 1);
         _pixel.SetData([Color.White]);
     }
 
     public void Draw(SpriteBatch batch) {
         Vector2 middle = new Vector2(
-            _game.GraphicsDevice.Viewport.Width / 2f,
-            _game.GraphicsDevice.Viewport.Height / 2f
+            _device.Viewport.Width / 2f,
+            _device.Viewport.Height / 2f
         );
 
         string line1 = "No map loaded!";
@@ -53,11 +53,11 @@ public class EditorNoMapLoadedScreen {
 
         int yOffset = topPadding;
         string officialPrisons = "Official Prisons";
-        DrawRightAlignedText(batch, _font, officialPrisons, new Vector2(_game.GraphicsDevice.Viewport.Width - horizontalPadding, yOffset), Color.LightGray);
+        DrawRightAlignedText(batch, _font, officialPrisons, new Vector2(_device.Viewport.Width - horizontalPadding, yOffset), Color.LightGray);
         yOffset += (int)_font.MeasureString(officialPrisons).Y + itemMargin;
 
         foreach (string prison in prisons) {
-            DrawRightAlignedText(batch, _font, prison, new Vector2(_game.GraphicsDevice.Viewport.Width - horizontalPadding, yOffset), Color.Gray);
+            DrawRightAlignedText(batch, _font, prison, new Vector2(_device.Viewport.Width - horizontalPadding, yOffset), Color.Gray);
             yOffset += (int)_font.MeasureString(prison).Y + itemMargin;
         }
 
@@ -68,11 +68,11 @@ public class EditorNoMapLoadedScreen {
         string[] bonusPrisons = ["Alcatraz", "Banned Camp", "Camp Epsilon", "Duck Tapes Are Forever", "Escape Team", "Fhurst Peak", "Fort Bamford", "Jingle Cells", "Paris Central Pen", "Santa's Sweatshop", "Tower of London"];
 
         string bonusPrisonsTitle = "Bonus Prisons";
-        DrawRightAlignedText(batch, _font, bonusPrisonsTitle, new Vector2(_game.GraphicsDevice.Viewport.Width - horizontalPadding, yOffset), Color.LightGray);
+        DrawRightAlignedText(batch, _font, bonusPrisonsTitle, new Vector2(_device.Viewport.Width - horizontalPadding, yOffset), Color.LightGray);
         yOffset += (int)_font.MeasureString(bonusPrisonsTitle).Y + itemMargin;
 
         foreach (string prison in bonusPrisons) {
-            DrawRightAlignedText(batch, _font, prison, new Vector2(_game.GraphicsDevice.Viewport.Width - horizontalPadding, yOffset), Color.Gray);
+            DrawRightAlignedText(batch, _font, prison, new Vector2(_device.Viewport.Width - horizontalPadding, yOffset), Color.Gray);
             yOffset += (int)_font.MeasureString(prison).Y + itemMargin;
         }
 
@@ -81,10 +81,10 @@ public class EditorNoMapLoadedScreen {
         // CUSTOM PRISONS
 
         string customPrisonsTitle = "Custom Prisons";
-        DrawRightAlignedText(batch, _font, customPrisonsTitle, new Vector2(_game.GraphicsDevice.Viewport.Width - horizontalPadding, yOffset), Color.LightGray);
+        DrawRightAlignedText(batch, _font, customPrisonsTitle, new Vector2(_device.Viewport.Width - horizontalPadding, yOffset), Color.LightGray);
         yOffset += (int)_font.MeasureString(customPrisonsTitle).Y + itemMargin;
 
-        DrawRightAlignedText(batch, _font, "(No custom maps installed.)", new Vector2(_game.GraphicsDevice.Viewport.Width - horizontalPadding, yOffset), Color.Gray);
+        DrawRightAlignedText(batch, _font, "(No custom maps installed.)", new Vector2(_device.Viewport.Width - horizontalPadding, yOffset), Color.Gray);
 
         yOffset = (int)(middle.Y * 2 - _font.MeasureString("C").Y / 2 - 6);
 
