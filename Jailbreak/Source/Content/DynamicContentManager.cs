@@ -13,21 +13,23 @@ using YamlDotNet.Serialization;
 
 namespace Jailbreak.Content;
 
-public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager)
-{
+public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager) {
 
     private readonly ILogger _logger = Log.ForContext<DynamicContentManager>();
 
     private Jailbreak _jailbreak = jailbreak;
     private ModManager _modManager = modManager;
 
+    private readonly Dictionary<Type, string> _typeNames = new();
+
     private readonly Dictionary<Type, IBaseContentHandler> _contentHandlers = new();
+    private readonly Dictionary<Type, string> _contentDiscoveryPaths = new();
+    private readonly Dictionary<Type, object> _fallbackContent = new();
 
     private readonly Dictionary<Type, Dictionary<string, object>> _content = new();
-    private readonly Dictionary<Type, object> _fallbackContent = new();
+    [Obsolete]
     private readonly Dictionary<string, ContentPredicate> _contentPredicates = new();
-    private readonly Dictionary<Type, string> _contentDiscoveryPaths = new();
-    private readonly Dictionary<Type, string> _typeNames = new();
+
     private readonly Dictionary<string, string> _filepathMacros = new();
 
     private readonly IDeserializer _yamlDeserializer = new DeserializerBuilder()
@@ -122,6 +124,7 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager)
                     }
 
                     _contentPredicates.Add(id, new ContentPredicate(id, filePath, kvp.Key));
+
                     _logger.Debug($"Content Predicate Registered: {id}");
                     predicateCount++;
                 }
