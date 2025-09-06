@@ -74,15 +74,15 @@ public class EditorScene : Scene.Scene {
         _contentManager = GetService<DynamicContentManager>();
         _inputManager = GetService<InputManager>();
 
-        _inputManager.LoadBindingGroup(_contentManager.GetContent<List<KeyBinding>>("escapists/bindings.editor"));
+        _inputManager.LoadBindingGroup(_contentManager.GetContent<List<KeyBinding>>("escapists:bindings.editor"));
 
         _state = new EditorState();
 
         _camera = new Camera(Game.GraphicsDevice.Viewport);
         _renderer = new EditorMapRenderer(Game.GraphicsDevice, _contentManager);
 
-        _debugCameraPositionTexture = _contentManager.GetContent<Texture2D>("escapists/image.camera_position_hint");
-        _debugCameraTargetPositionTexture = _contentManager.GetContent<Texture2D>("escapists/image.camera_target_hint");
+        _debugCameraPositionTexture = _contentManager.GetContent<Texture2D>("escapists:image.camera_position_hint");
+        _debugCameraTargetPositionTexture = _contentManager.GetContent<Texture2D>("escapists:image.camera_target_hint");
 
         _pixelTexture = new Texture2D(Game.GraphicsDevice, 1, 1);
         _pixelTexture.SetData([Color.White]);
@@ -408,7 +408,7 @@ public class EditorScene : Scene.Scene {
 
         if (map.TilesetData == null) {
             _logger.Warning($"Requested tileset \"{map.TilesetId}\" does not exist, falling back to default.");
-            var fallbackTileset = _contentManager.GetContent<Tileset>("escapists/tileset.perks");
+            var fallbackTileset = _contentManager.GetContent<Tileset>("escapists:tileset.perks");
             if (fallbackTileset == null) {
                 _logger.Error("Could not load fallback tileset! Aborting map load.");
                 SetMap(null);
@@ -416,18 +416,18 @@ public class EditorScene : Scene.Scene {
                 return;
             }
             else {
-                map.ChangeTileset(_contentManager.GetContent<Tileset>("escapists/tileset.perks"));
+                map.ChangeTileset(_contentManager.GetContent<Tileset>("escapists:tileset.perks"));
                 ShowMessage("Warning", $"The tileset this map is asking for \"{map.TilesetId}\" does not exist.\nJailmaker has selected a fallback one, however it may not look right.\n\nYou can select a valid tileset in the properties menu.");
             }
         }
 
         var undergroundTexture = _state.Map.IsCustom ?
-            _contentManager.GetContent<Texture2D>("escapists/image.ground_soil_custom") :
-            _contentManager.GetContent<Texture2D>("escapists/image.ground_soil");
+            _contentManager.GetContent<Texture2D>("escapists:image.ground_soil_custom") :
+            _contentManager.GetContent<Texture2D>("escapists:image.ground_soil");
 
         _renderer.UndergroundTexture = undergroundTexture;
-        _renderer.GroundTexture = _contentManager.GetContent<Texture2D>("escapists/image.ground_" + map.TilesetData.Id);
-        _renderer.TilesetTexture = _contentManager.GetContent<Texture2D>("escapists/image." + map.TilesetData.Id);
+        _renderer.GroundTexture = _contentManager.GetContent<Texture2D>("escapists:image.ground_" + map.TilesetData.Id);
+        _renderer.TilesetTexture = _contentManager.GetContent<Texture2D>("escapists:image." + map.TilesetData.Id);
 
 
         _camera.Bounds = new Rectangle(0, 0, map.Width * map.GetTilesetTileWidth(), map.Height * map.GetTilesetTileHeight());
