@@ -5,7 +5,7 @@ namespace Jailbreak.Scene;
 
 public abstract class Scene(Jailbreak game)
 {
-    protected Jailbreak Game => game;
+    public Jailbreak Game => game;
 
     /// <summary>
     /// Called the frame that the scene is ready to start.

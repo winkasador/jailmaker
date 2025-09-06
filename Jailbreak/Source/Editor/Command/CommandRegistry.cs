@@ -8,6 +8,9 @@ public class CommandRegistry {
 
     public CommandRegistry() {
         _commands.Add("editor.open_file", new DelegateCommand(ctx => ctx.ShowOpenFileDialog()));
+        _commands.Add("editor.undo", new DelegateCommand(ctx => ctx.State.History.UndoAndRemoveLatestAction()));
+        _commands.Add("editor.toggle_tile_palette", new DelegateCommand(ctx => ctx.ToggleTileWindow()));
+        _commands.Add("editor.quit", new DelegateCommand(ctx => ctx.QuitApplication()));
     }
 
     public ICommand GetCommand(string commandName) {

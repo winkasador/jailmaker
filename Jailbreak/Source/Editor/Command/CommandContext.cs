@@ -12,5 +12,8 @@ public class CommandContext {
 
     public void ToggleTileWindow() => _scene.ToggleTileWindow();
     public void ShowOpenFileDialog() => _scene.OpenFileSelectDialog();
+    public void QuitApplication() {
+        _scene.Game.Exit();
+    }
 
 }

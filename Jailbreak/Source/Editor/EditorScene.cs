@@ -107,7 +107,6 @@ public class EditorScene : Scene.Scene {
 
         _inputManager.Desktop = _desktop;
 
-        //CreateMenuBar();
         UpdateWindowTitle();
         SetMapSpecificMenuItems(false);
     }
@@ -142,7 +141,7 @@ public class EditorScene : Scene.Scene {
             _mouseTilePosition = (_mousePosition / 16).ToPoint();
 
             if(_inputManager.IsKeybindingTriggered("editor.undo")) {
-                _state.History.UndoAndRemoveLatestAction();
+                _commandRegistry.GetCommand("editor.undo").Execute(new CommandContext(this));
             }
 
             if(_inputManager.IsKeybindingTriggered("editor.toggle_mode")) {
@@ -193,7 +192,7 @@ public class EditorScene : Scene.Scene {
             } 
 
             if(_inputManager.IsKeybindingTriggered("editor.window.tiles")) {
-                ToggleTileWindow();
+                _commandRegistry.GetCommand("editor.toggle_tile_palette").Execute(new CommandContext(this));
             }
 
             if(_inputManager.IsKeybindingTriggered("editor.next") && _state.editMode == EditMode.Paint && _state.Map.TilesetData != null) {
@@ -244,7 +243,7 @@ public class EditorScene : Scene.Scene {
             _commandRegistry.GetCommand("editor.open_file").Execute(new CommandContext(this));
         }
         if (_inputManager.IsKeybindingTriggered("editor.quit")) {
-            Game.Exit();
+            _commandRegistry.GetCommand("editor.quit").Execute(new CommandContext(this));
         } 
 
         if (_inputManager.IsKeybindingTriggered("debug.toggle_debug_ui")) {
@@ -264,10 +263,8 @@ public class EditorScene : Scene.Scene {
         _batch.Begin(transformMatrix: _camera.GetMatrix(), samplerState: SamplerState.PointWrap, blendState: BlendState.NonPremultiplied);
         if (_state.Map != null) {
             _renderer.RenderMap(_batch, _state.Map, _state.activeFloor);
-            //_renderer.DebugDrawShadows(_batch, _state.map, _state.activeFloor);
 
             // Overlays
-
             if (_state.Map.ContainsWorldPos(_mousePosition.ToPoint()) && !_inputManager.IsMouseOverWidget()) {
                 _renderer.DrawCursor(_batch, _state.editMode, _state.selectedTile, _mouseTilePosition, _state.stateTime);
             }
@@ -298,18 +295,6 @@ public class EditorScene : Scene.Scene {
         }
 
         _desktop.Render();
-    }
-
-    // TODO: Move into a TextRenderer class.
-    public void DrawCenteredText(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color color) {
-        Vector2 textSize = font.MeasureString(text);
-        batch.DrawString(font, text, position, color, 0f, textSize / 2f, 1f, SpriteEffects.None, 0f);
-    }
-
-    // TODO: Move into a TextRenderer class.
-    public void DrawRightAlignedText(SpriteBatch batch, SpriteFont font, string text, Vector2 position, Color color) {
-        Vector2 textSize = font.MeasureString(text);
-        batch.DrawString(font, text, position, color, 0f, textSize, 1f, SpriteEffects.None, 0f);
     }
 
     // TODO: Move into a OpenFileDialog class.
@@ -424,7 +409,6 @@ public class EditorScene : Scene.Scene {
         _renderer.UndergroundTexture = undergroundTexture;
         _renderer.GroundTexture = _contentManager.GetContent<Texture2D>("escapists:image.ground_" + map.TilesetData.Id);
         _renderer.TilesetTexture = _contentManager.GetContent<Texture2D>("escapists:image." + map.TilesetData.Id);
-
 
         _camera.Bounds = new Rectangle(0, 0, map.Width * map.GetTilesetTileWidth(), map.Height * map.GetTilesetTileHeight());
 
