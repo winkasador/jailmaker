@@ -5,6 +5,7 @@ using System.Linq;
 using Jailbreak.Content.Handler;
 using Jailbreak.Data;
 using Jailbreak.Mod;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Serilog;
 using YamlDotNet.Core;
@@ -23,6 +24,7 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager)
     private readonly Dictionary<Type, IBaseContentHandler> _contentHandlers = new();
 
     private readonly Dictionary<Type, Dictionary<string, object>> _content = new();
+    private readonly Dictionary<Type, object> _fallbackContent = new();
     private readonly Dictionary<string, ContentPredicate> _contentPredicates = new();
     private readonly Dictionary<Type, string> _contentDiscoveryPaths = new();
     private readonly Dictionary<Type, string> _typeNames = new();
@@ -39,7 +41,7 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager)
         var type = typeof(T);
         if(!_content.ContainsKey(type)) {
             _logger.Error($"Failed To Get Content with id '{id}': Content Manager does not support '{type}'.");
-            return default;
+            return GetFallbackContent<T>();
         }
 
         if(_content[type].ContainsKey(id) && _content[type][id] is T content) {
@@ -59,7 +61,7 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager)
             _logger.Error($"Failed to get content '{id}' because it is the wrong type (Expected '{type}', got '{_contentPredicates[id].DataType}').");
         }
 
-        return default;
+        return GetFallbackContent<T>();
     }
 
     public T LoadContent<T>(string predicateId) {
@@ -67,17 +69,17 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager)
         var type = typeof(T);
         if(!_contentHandlers.ContainsKey(type)) {
             _logger.Error($"Failed To Load Content with id '{predicateId}': Content Manager has no handler for '{type}'.");
-            return default;
+            return GetFallbackContent<T>();
         }
         if(!_contentPredicates.ContainsKey(predicateId)) {
             _logger.Error($"Failed To Load Content with id '{predicateId}': No Predicate Loaded for this ID.");
-            return default;
+            return GetFallbackContent<T>();
         }
 
         var predicate = _contentPredicates[predicateId];
         if(!File.Exists(predicate.Path)) {
             _logger.Error($"Failed To Load Content with id '{predicateId}': file does not exist. Filepath: '{predicate.Path}'");
-            return default;
+            return GetFallbackContent<T>();
         }
 
         byte[] bytes = File.ReadAllBytes(predicate.Path);
@@ -91,7 +93,7 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager)
         }
         catch(YamlException e) {
             _logger.Error(e, $"Failed To Load Content with id '{predicateId}' because of error at {e.End}.");
-            return default;
+            return GetFallbackContent<T>();
         }
     }
 
@@ -138,8 +140,13 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager)
         }
 
         RegisterContentType(mod.GetContentLocationsFor("tileset"), "tileset", new TilesetContentHandler(this));
-        RegisterContentType(mod.GetContentLocationsFor("image"), "image", new Texture2DContentHandler(device, this));
+
+        Texture2D defaultTexture = new Texture2D(device, 1, 1);
+        defaultTexture.SetData([Color.Purple]);
+        RegisterContentType(mod.GetContentLocationsFor("image"), "image", new Texture2DContentHandler(device, this), defaultTexture);
+
         RegisterContentType(mod.GetContentLocationsFor("sound"), "sound", new SoundEffectContentHandler(this));
+
         RegisterContentType(mod.GetContentLocationsFor("bindings"), "bindings", new KeybindingsHandler(this));
 
         DiscoverContent(mod);
@@ -160,19 +167,29 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager)
         _contentHandlers[type] = handler;
     }
 
-    public void RegisterContentType<T>(List<string> directories, string typeName, IContentHandler<T> handler) {
+    public void RegisterContentType<T>(List<string> directories, string typeName, IContentHandler<T> handler, T fallbackContent = default) {
         var type = typeof(T);
-        if(_contentHandlers.ContainsKey(type)) {
+
+        if (_contentHandlers.ContainsKey(type)) {
             _logger.Error($"Failed to register Content Handler: a Handler for '{type}' already exists.");
             return;
         }
 
-        foreach (string directory in directories) {
-            _contentDiscoveryPaths.Add(type, directory);
-            _logger.Information($"Registering Content Handler '{handler}' for '{typeName}' in '{directory}'.");
+        _logger.Information($"Registering Content Handler '{handler}' for '{typeName}'.");
+
+        if (directories.Count != 0) {
+            foreach (string directory in directories) {
+                _contentDiscoveryPaths.Add(type, directory);
+                _logger.Information($"Added content path '{directory}'. ({typeName}).");
+            }
         }
+        else {
+            _logger.Warning($"No directories have been set for \"{typeName}\". No content will be found be this handler.");
+        }
+
         _content.Add(type, new());
         _typeNames.Add(type, typeName);
+        _fallbackContent.Add(type, fallbackContent);
 
         _contentHandlers[type] = handler;
     }
@@ -201,9 +218,16 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager)
         return "?";
     }
 
+    private T GetFallbackContent<T>() {
+        if (_fallbackContent.TryGetValue(typeof(T), out var content)) {
+            return (T)content;
+        }
+        else return default;
+    }
+    
     public void Dispose() {
         _logger.Information($"Disposing All Content.");
-        foreach(var type in _content.Values) {
+        foreach (var type in _content.Values) {
             foreach (var entry in type.Values) {
                 if (entry is IDisposable disposable) {
                     disposable.Dispose();
