@@ -36,37 +36,33 @@ public class EditorScene : Scene.Scene {
     private Vector2 _mousePosition = new Vector2();
     private Point _mouseTilePosition = new Point();
 
+    // Rendering
     private SpriteBatch _batch;
     private EditorMapRenderer _renderer;
-    private EditorDebugHUD _debugHUD;
-    private MapLoader _mapLoader;
-    private EditorNoMapLoadedScreen _noMapLoadedScreen;
-
-    private Desktop _desktop;
-    private Window _tilePaletteWindow;
-
-    #region Textures
-
     private Texture2D _pixelTexture;
-
-    private Texture2D _debugCameraPositionTexture;
-    private Texture2D _debugCameraTargetPositionTexture;
-
-    #endregion
 
     private SpriteFont _titleFont;
     private SpriteFont _font;
     private Background _background;
     private Color _backgroundColor;
 
+    private Texture2D _debugCameraPositionTexture;
+    private Texture2D _debugCameraTargetPositionTexture;
 
+    // Functionality
+    private CommandRegistry _commandRegistry;
+    private MapLoader _mapLoader;
+
+    // UI Elements
+    private Desktop _desktop;
+    
+    private HorizontalMenu _menubar;
+    private FileDialog _openFileDialog;
+    private EditorDebugHUD _debugHUD;
+    private Window _tilePaletteWindow;
+    private EditorNoMapLoadedScreen _noMapLoadedScreen;
     private EditorMapPropertiesWindow _propertiesWindow;
 
-    private CommandRegistry _commandRegistry;
-    private FileDialog _openFileDialog;
-
-    // Menubar
-    private HorizontalMenu _menubar;
 
     public EditorScene(Jailbreak game) : base(game) {
         _batch = new SpriteBatch(Game.GraphicsDevice);
