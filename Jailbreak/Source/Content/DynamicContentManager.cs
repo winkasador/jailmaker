@@ -37,6 +37,7 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager)
         .Build();
 
     public T GetContent<T>(string id) {
+        id = id.Replace("/", ":"); // TODO: Remove after uses of / have been removed.
         _logger.Debug($"Getting Content with ID '{id}'.");
         var type = typeof(T);
         if(!_content.ContainsKey(type)) {
@@ -65,6 +66,7 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager)
     }
 
     public T LoadContent<T>(string predicateId) {
+        predicateId = predicateId.Replace("/", ":"); // TODO: Remove after uses of / have been removed.
         _logger.Debug($"Loading predicate: '{predicateId}'");
         var type = typeof(T);
         if(!_contentHandlers.ContainsKey(type)) {
@@ -112,7 +114,7 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager)
                     if(!filePath.EndsWith(".yml") && !filePath.EndsWith(".yaml")) continue;
 
                     var name = filePath.Replace("\\", "/").Split("/").Last().Replace(".yml", "").Replace(".yaml", "");
-                    var id = $"{activeMod.Id}/{_typeNames[kvp.Key]}.{name}";
+                    var id = $"{activeMod.Id}:{_typeNames[kvp.Key]}.{name}";
 
                     if(_contentPredicates.ContainsKey(id)) {
                         _logger.Error($"Failed to load Content Predicate, an entry with the ID: '{id}' is already loaded.");
@@ -224,9 +226,14 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager)
         }
         else return default;
     }
-    
+
+    public IDeserializer GetDeserializer() {
+        return _yamlDeserializer;
+    }
+
     public void Dispose() {
-        _logger.Information($"Disposing All Content.");
+        _logger.Information($"Disposing Content.");
+
         foreach (var type in _content.Values) {
             foreach (var entry in type.Values) {
                 if (entry is IDisposable disposable) {
@@ -235,9 +242,4 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager)
             }
         }
     }
-
-    public IDeserializer GetDeserializer() {
-        return _yamlDeserializer;
-    }
-
 } 
