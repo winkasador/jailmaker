@@ -61,7 +61,7 @@ public class EditorScene : Scene.Scene {
     private EditorDebugHUD _debugHUD;
     private Window _tilePaletteWindow;
     private EditorNoMapLoadedScreen _noMapLoadedScreen;
-    private EditorMapPropertiesWindow _propertiesWindow;
+    private PropertiesWindow _propertiesWindow;
 
 
     public EditorScene(Jailbreak game) : base(game) {
@@ -117,7 +117,7 @@ public class EditorScene : Scene.Scene {
         _tilePaletteWindow.Content = new EditorTilePalette(_state, _renderer);
         _tilePaletteWindow.Visible = false;
 
-        _propertiesWindow = new EditorMapPropertiesWindow();
+        _propertiesWindow = new PropertiesWindow();
         _propertiesWindow.Visible = false;
 
         _desktop.Widgets.Add(_tilePaletteWindow);

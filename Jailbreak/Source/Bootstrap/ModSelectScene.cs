@@ -1,9 +1,8 @@
-using System;
 using Jailbreak.Content;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Jailbreak;
+namespace Jailbreak.Bootstrap;
 
 public class ModSelectScene : Scene.Scene {
 

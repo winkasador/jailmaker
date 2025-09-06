@@ -18,7 +18,7 @@ public class PropertyContainer {
                 properties.Add(currentSection, new Dictionary<string, string>());
             }
             if(currentSection != "") {
-                if(line.Contains("=")) {
+                if(line.Contains('=')) {
                     var property = line.Trim().Split('=');
                     if (properties[currentSection].ContainsKey(property[0])) continue;
                     properties[currentSection].Add(property[0], property[1]);
