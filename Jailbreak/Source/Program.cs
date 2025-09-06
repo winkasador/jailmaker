@@ -1,2 +1,2 @@
-﻿using var game = new Jailbreak.Jailbreak();
+﻿using var game = new Jailbreak.Jailbreak(args);
 game.Run();

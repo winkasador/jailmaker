@@ -30,8 +30,16 @@ public class Jailbreak : Game {
     private IServiceProvider _services;
 
     private bool _isInitialized = false;
+    
+    public bool IsDebugMode { get; private set; }
 
-    public Jailbreak() {
+    public Jailbreak(string[] args) {
+        foreach (string arg in args) {
+            if (arg.Equals("--debug")) {
+                IsDebugMode = true;
+            }
+        }
+
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content/";
         IsMouseVisible = true;
@@ -52,7 +60,8 @@ public class Jailbreak : Game {
             .CreateLogger();
     
         _logger = Log.ForContext<Jailbreak>();
-        _logger.Information("Starting Jailbreak.");
+        if (IsDebugMode) _logger.Information("Starting Jailbreak in Debug Mode.");
+        else _logger.Information("Starting Jailbreak.");
 
         _logger.Information("Creating Performance Monitoring Service...");
         _performance = new Performance(this, _graphics);
@@ -81,7 +90,7 @@ public class Jailbreak : Game {
             LaunchBootstrapSequence();
             return;
         }
-        else if (modCount == 1) {
+        else if (modCount == 1 && !IsDebugMode) {
             _modManager.SelectMod(mods.First().Key);
             _mod = _modManager.ActiveMod;
         }
