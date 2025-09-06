@@ -108,21 +108,11 @@ public class Jailbreak : Game {
         InputManager = new InputManager();
         InputManager.Game = this;
 
-        _logger.Information("Building Service Provider...");
-        var serviceCollection = new ServiceCollection();
-        serviceCollection.AddSingleton(this);
-        serviceCollection.AddSingleton(InputManager);
-        serviceCollection.AddSingleton(ContentManager);
-        serviceCollection.AddSingleton(_graphics);
-        serviceCollection.AddSingleton(SceneManager);
-        serviceCollection.AddSingleton(Performance);
-        _services = serviceCollection.BuildServiceProvider();
-
         _isInitialized = true;
 
         _logger.Information("Finished Initializing.");
 
-        SceneManager.ChangeScene(new EditorScene(this, _services));
+        SceneManager.ChangeScene(new EditorScene(this));
     }
 
     private void LaunchBootstrapSequence() {

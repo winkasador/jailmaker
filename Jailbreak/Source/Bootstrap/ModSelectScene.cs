@@ -12,7 +12,7 @@ public class ModSelectScene : Scene.Scene {
 
     private Texture2D _errorBackdropImage;
 
-    public ModSelectScene(Jailbreak game) : base(game, null) {
+    public ModSelectScene(Jailbreak game) : base(game) {
         _batch = new SpriteBatch(Game.GraphicsDevice);
         _font = Game.Content.Load<SpriteFont>("escapists/Fonts/Escapists");
 

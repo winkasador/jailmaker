@@ -3,10 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Jailbreak.Scene;
 
-public abstract class Scene(Jailbreak game, IServiceProvider services)
+public abstract class Scene(Jailbreak game)
 {
     protected Jailbreak Game => game;
-    protected T GetService<T>() => (T)services.GetRequiredService(typeof(T));
 
     /// <summary>
     /// Called the frame that the scene is ready to start.

@@ -68,11 +68,11 @@ public class EditorScene : Scene.Scene {
     // Menubar
     private HorizontalMenu _menubar;
 
-    public EditorScene(Jailbreak game, IServiceProvider services) : base(game, services) {
+    public EditorScene(Jailbreak game) : base(game) {
         _batch = new SpriteBatch(Game.GraphicsDevice);
 
-        _contentManager = GetService<DynamicContentManager>();
-        _inputManager = GetService<InputManager>();
+        _contentManager = game.ContentManager;
+        _inputManager = game.InputManager;
 
         _inputManager.LoadBindingGroup(_contentManager.GetContent<List<KeyBinding>>("escapists:bindings.editor"));
 

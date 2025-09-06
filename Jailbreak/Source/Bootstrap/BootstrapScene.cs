@@ -11,7 +11,7 @@ public class BootstrapScene : Scene.Scene {
 
     private Texture2D _errorBackdropImage;
 
-    public BootstrapScene(Jailbreak game) : base(game, null) {
+    public BootstrapScene(Jailbreak game) : base(game) {
         _batch = new SpriteBatch(Game.GraphicsDevice);
         _font = Game.Content.Load<SpriteFont>("escapists/Fonts/Escapists");
 
