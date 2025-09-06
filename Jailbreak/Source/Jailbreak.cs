@@ -20,18 +20,17 @@ public class Jailbreak : Game {
     private ILogger _logger;
 
     private GraphicsDeviceManager _graphics;
-    private SceneManager _sceneManager;
-    private InputManager _inputManager;
-
-    private ModManager _modManager;
-    public DynamicContentManager _contentManager;
-    private Performance _performance;
 
     private IServiceProvider _services;
 
     private bool _isInitialized = false;
     
-    public ModManager ModManager { get { return _modManager; } }
+    public SceneManager SceneManager { get; private set; }
+    public InputManager InputManager { get; private set; }
+    public ModManager ModManager { get; private set; }
+    public DynamicContentManager ContentManager { get; private set; }
+    public Performance Performance { get; private set; }
+
     public bool IsDebugMode { get; private set; }
 
     public Jailbreak(string[] args) {
@@ -65,7 +64,7 @@ public class Jailbreak : Game {
         else _logger.Information("Starting Jailbreak.");
 
         _logger.Information("Creating Performance Monitoring Service...");
-        _performance = new Performance(this, _graphics);
+        Performance = new Performance(this, _graphics);
         
         _graphics.PreferredBackBufferWidth = (int)(1920 / 1.2);
         _graphics.PreferredBackBufferHeight = (int)(1080 / 1.2);
@@ -76,24 +75,24 @@ public class Jailbreak : Game {
         base.Initialize();
 
         _logger.Information("Creating Scene Manager Service...");
-        _sceneManager = new SceneManager(this);
+        SceneManager = new SceneManager(this);
 
-        _modManager = new ModManager(this);
-        _modManager.DiscoverMods();
+        ModManager = new ModManager(this);
+        ModManager.DiscoverMods();
 
         _logger.Information("Creating Content Manager Service...");
-        _contentManager = new DynamicContentManager(this, _modManager);
+        ContentManager = new DynamicContentManager(this, ModManager);
 
-        var mods = _modManager.InstalledMods;
-        int modCount = _modManager.GetModCount();
+        var mods = ModManager.InstalledMods;
+        int modCount = ModManager.GetModCount();
 
         if (modCount == 0) {
             LaunchBootstrapSequence();
             return;
         }
         else if (modCount == 1 && !IsDebugMode) {
-            _modManager.SelectMod(mods.First().Key);
-            _mod = _modManager.ActiveMod;
+            ModManager.SelectMod(mods.First().Key);
+            _mod = ModManager.ActiveMod;
         }
         else {
             LaunchModSelector();
@@ -104,44 +103,44 @@ public class Jailbreak : Game {
     }
 
     public void FinishInitialization() {
-        _contentManager.RegisterMod(_mod, GraphicsDevice);
+        ContentManager.RegisterMod(_mod, GraphicsDevice);
 
-        _inputManager = new InputManager();
-        _inputManager.Game = this;
+        InputManager = new InputManager();
+        InputManager.Game = this;
 
         _logger.Information("Building Service Provider...");
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddSingleton(this);
-        serviceCollection.AddSingleton(_inputManager);
-        serviceCollection.AddSingleton(_contentManager);
+        serviceCollection.AddSingleton(InputManager);
+        serviceCollection.AddSingleton(ContentManager);
         serviceCollection.AddSingleton(_graphics);
-        serviceCollection.AddSingleton(_sceneManager);
-        serviceCollection.AddSingleton(_performance);
+        serviceCollection.AddSingleton(SceneManager);
+        serviceCollection.AddSingleton(Performance);
         _services = serviceCollection.BuildServiceProvider();
 
         _isInitialized = true;
 
         _logger.Information("Finished Initializing.");
 
-        _sceneManager.ChangeScene(new EditorScene(this, _services));
+        SceneManager.ChangeScene(new EditorScene(this, _services));
     }
 
     private void LaunchBootstrapSequence() {
-        ModDefinition bootstrapMod = _modManager.InstalledMods["_global"];
-        _contentManager.AddFilePathMacro("Global|", bootstrapMod.GetBasePath());
-        _contentManager.RegisterContentType("Global|Textures/", "image", new Texture2DContentHandler(GraphicsDevice, _contentManager));
-        _contentManager.DiscoverContent(bootstrapMod);
+        ModDefinition bootstrapMod = ModManager.InstalledMods["_global"];
+        ContentManager.AddFilePathMacro("Global|", bootstrapMod.GetBasePath());
+        ContentManager.RegisterContentType("Global|Textures/", "image", new Texture2DContentHandler(GraphicsDevice, ContentManager));
+        ContentManager.DiscoverContent(bootstrapMod);
 
-        _sceneManager.ChangeScene(new BootstrapScene(this));
+        SceneManager.ChangeScene(new BootstrapScene(this));
     }
 
     private void LaunchModSelector() {
-        ModDefinition bootstrapMod = _modManager.InstalledMods["_global"];
-        _contentManager.AddFilePathMacro("Global|", bootstrapMod.GetBasePath());
-        _contentManager.RegisterContentType("Global|Textures/", "image", new Texture2DContentHandler(GraphicsDevice, _contentManager));
-        _contentManager.DiscoverContent(bootstrapMod);
+        ModDefinition bootstrapMod = ModManager.InstalledMods["_global"];
+        ContentManager.AddFilePathMacro("Global|", bootstrapMod.GetBasePath());
+        ContentManager.RegisterContentType("Global|Textures/", "image", new Texture2DContentHandler(GraphicsDevice, ContentManager));
+        ContentManager.DiscoverContent(bootstrapMod);
 
-        _sceneManager.ChangeScene(new ModSelectScene(this));
+        SceneManager.ChangeScene(new ModSelectScene(this));
     }
 
     protected override void LoadContent() {
@@ -149,39 +148,39 @@ public class Jailbreak : Game {
     }
 
     protected override void Update(GameTime gameTime) {
-        _performance.BeginUpdate();
+        Performance.BeginUpdate();
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
         if (_isInitialized) {
-            _inputManager.Update(deltaTime);
-            if (_inputManager.IsKeybindingTriggered("window.toggle_fullscreen")) {
+            InputManager.Update(deltaTime);
+            if (InputManager.IsKeybindingTriggered("window.toggle_fullscreen")) {
                 _graphics.ToggleFullScreen();
             }
         }
 
-        _sceneManager.Scene?.Update(deltaTime);
+        SceneManager.Scene?.Update(deltaTime);
 
         base.Update(gameTime);
 
-        _performance.EndUpdate();
-        _performance.Tick(deltaTime);
+        Performance.EndUpdate();
+        Performance.Tick(deltaTime);
     }
 
     protected override void Draw(GameTime gameTime) {
-        _performance.BeginDraw();
+        Performance.BeginDraw();
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-        _sceneManager.Scene?.Draw(deltaTime);
+        SceneManager.Scene?.Draw(deltaTime);
         base.Draw(gameTime);
 
-        _performance.EndDraw();
+        Performance.EndDraw();
     }
 
     protected override void UnloadContent() {
         _logger.Information("Unloading Content.");
 
         if (_isInitialized) {
-            _contentManager.Dispose();
+            ContentManager.Dispose();
         }
 
         _logger.Information("Shutting Down.");
