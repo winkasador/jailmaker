@@ -31,6 +31,7 @@ public class Jailbreak : Game {
 
     private bool _isInitialized = false;
     
+    public ModManager ModManager { get { return _modManager; } }
     public bool IsDebugMode { get; private set; }
 
     public Jailbreak(string[] args) {
@@ -95,7 +96,7 @@ public class Jailbreak : Game {
             _mod = _modManager.ActiveMod;
         }
         else {
-            LaunchBootstrapSequence();
+            LaunchModSelector();
             return;
         }
 
@@ -132,6 +133,15 @@ public class Jailbreak : Game {
         _contentManager.DiscoverContent(bootstrapMod);
 
         _sceneManager.ChangeScene(new BootstrapScene(this));
+    }
+
+    private void LaunchModSelector() {
+        ModDefinition bootstrapMod = _modManager.InstalledMods["_global"];
+        _contentManager.AddFilePathMacro("Global|", bootstrapMod.GetBasePath());
+        _contentManager.RegisterContentType("Global|Textures/", "image", new Texture2DContentHandler(GraphicsDevice, _contentManager));
+        _contentManager.DiscoverContent(bootstrapMod);
+
+        _sceneManager.ChangeScene(new ModSelectScene(this));
     }
 
     protected override void LoadContent() {
