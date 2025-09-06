@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Jailbreak.Content;
+using Jailbreak.Mod;
 using Jailbreak.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,18 +11,18 @@ namespace Jailbreak.Editor.Interface;
 
 public class EditorDebugHUD {
 
-    private Jailbreak _game;
     private Performance _performance;
+    private ModManager _modManager;
     private DynamicContentManager _content;
 
     private SpriteFont _font;
 
     private int _yPosition;
 
-    public EditorDebugHUD(IServiceProvider services, SpriteFont font) {
-        _game = services.GetService(typeof(Jailbreak)) as Jailbreak;
-        _performance = services.GetService(typeof(Performance)) as Performance;
-        _content = services.GetService(typeof(DynamicContentManager)) as DynamicContentManager;
+    public EditorDebugHUD(ModManager modManager, Performance performance, DynamicContentManager content, SpriteFont font) {
+        _modManager = modManager;
+        _performance = performance;
+        _content = content;
 
         _font = font;
     }
@@ -31,9 +32,9 @@ public class EditorDebugHUD {
 
         DrawLine(batch, bounds, $"Jailbreak Editor 0.1");
 
-        string mod = $"Mod: \"{_game.Mod.Id}\"";
-        mod += FormatCreditedUserList(" by ", _game.Mod.Authors);
-        mod += FormatCreditedUserList(" with credits to", _game.Mod.Credits) + ".";
+        string mod = $"Mod: \"{_modManager.ActiveMod.Id}\"";
+        mod += FormatCreditedUserList(" by ", _modManager.ActiveMod.Authors);
+        mod += FormatCreditedUserList(" with credits to", _modManager.ActiveMod.Credits) + ".";
 
         DrawLine(batch, bounds, mod);
 

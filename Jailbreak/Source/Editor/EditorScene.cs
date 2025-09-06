@@ -97,7 +97,7 @@ public class EditorScene : Scene.Scene {
         _font = Game.Content.Load<SpriteFont>("escapists/Fonts/Escapists");
         _titleFont = Game.Content.Load<SpriteFont>("escapists/Fonts/8BitSnobbery");
 
-        _debugHUD = new EditorDebugHUD(services, _font);
+        _debugHUD = new EditorDebugHUD(game.ModManager, game.Performance, game.ContentManager, _font);
 
         _noMapLoadedScreen = new EditorNoMapLoadedScreen(Game.GraphicsDevice, _font);
 
