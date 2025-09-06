@@ -18,8 +18,7 @@ public class SelectTileAction : IAction
         _previousSelectedTile = state.selectedTile;
     }
 
-    public void PerformAction()
-    {
+    public void PerformAction() {
         _editorState.editMode = _editMode;
         _editorState.selectedTile = _selectedTile;
         EditorSoundEffects.PICK_TILE.Play();

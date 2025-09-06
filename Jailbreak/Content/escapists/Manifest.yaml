@@ -13,7 +13,7 @@ macros:
 content:
   tileset: [Content|Data/Tilesets]
   image: [Content|Data/Textures]
-  sounds: [Content|Data/Sounds]
+  sound: [Content|Data/Sounds]
   bindings: [Content|Data/Bindings]
 
 roles:
