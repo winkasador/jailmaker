@@ -1,5 +1,4 @@
 id: placeholder
-texture_path: Content|Textures/Tilesets/placeholder.xnb
 tile_count: 100
 editor_groups:
   checkered_tile: [1, 2]

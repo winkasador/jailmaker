@@ -50,7 +50,7 @@ public class MapRenderer {
         set {
             _tilesetTexture = value;
             TilesetUtil.ReplaceColors(_tilesetTexture, Color.White, Color.Transparent);
-            _tileTextures = TilesetUtil.AtlasToTextureList(TilesetTexture, _graphicsDevice, Tileset.DefaultTileSize, Tileset.DefaultTileSize);
+            _tileTextures = TilesetUtil.AtlasToTextureList(TilesetTexture, _graphicsDevice, TilesetData.DefaultTileSize, TilesetData.DefaultTileSize);
         }
     }
 
@@ -69,7 +69,7 @@ public class MapRenderer {
     }
 
     public virtual void RenderLayer(SpriteBatch batch, Map map, int layer) {
-        Rectangle drawArea = new Rectangle(0, 0, map.Width * Tileset.DefaultTileSize, map.Height * Tileset.DefaultTileSize);
+        Rectangle drawArea = new Rectangle(0, 0, map.Width * TilesetData.DefaultTileSize, map.Height * TilesetData.DefaultTileSize);
         if(layer == 0)
             batch.Draw(_undergroundTexture, drawArea, drawArea, new Color(255, 255, 255, 150));
         else if(layer == 1)
@@ -82,19 +82,19 @@ public class MapRenderer {
         for(int y = 0; y < map.Height; y++) {
             for(int x = 0; x < map.Width; x++) {
                 int tile = tiles[y,x];
-                if(tile != Tileset.EmptyTile) {
+                if(tile != TilesetData.EmptyTile) {
                     if(tile <= 0 || tile > _tileTextures.Count) {
-                        batch.Draw(_pixelTexture, new Rectangle(x * Tileset.DefaultTileSize, y * Tileset.DefaultTileSize, Tileset.DefaultTileSize, Tileset.DefaultTileSize), new Color(255, 255, 255, tile * 2));
+                        batch.Draw(_pixelTexture, new Rectangle(x * TilesetData.DefaultTileSize, y * TilesetData.DefaultTileSize, TilesetData.DefaultTileSize, TilesetData.DefaultTileSize), new Color(255, 255, 255, tile * 2));
                     }
                     else {
-                        batch.Draw(_tileTextures[tile - 1], new Rectangle(x * Tileset.DefaultTileSize, y * Tileset.DefaultTileSize, Tileset.DefaultTileSize, Tileset.DefaultTileSize), Color.White);
+                        batch.Draw(_tileTextures[tile - 1], new Rectangle(x * TilesetData.DefaultTileSize, y * TilesetData.DefaultTileSize, TilesetData.DefaultTileSize, TilesetData.DefaultTileSize), Color.White);
                     }
                 }
 
                 if(map.ShadowMap.ContainsKey(layer)) {
                     var shadowType = map.ShadowMap[layer][y][x];
                     if(shadowType != SHADOW_NONE) {
-                        batch.Draw(_shadowTextures[shadowType - 1], new Rectangle(x * Tileset.DefaultTileSize, y * Tileset.DefaultTileSize, Tileset.DefaultTileSize, Tileset.DefaultTileSize), _shadowColor);
+                        batch.Draw(_shadowTextures[shadowType - 1], new Rectangle(x * TilesetData.DefaultTileSize, y * TilesetData.DefaultTileSize, TilesetData.DefaultTileSize, TilesetData.DefaultTileSize), _shadowColor);
                     }
                 }                
             }

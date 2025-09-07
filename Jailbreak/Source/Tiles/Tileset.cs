@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Jailbreak.Data;
 
-public class Tileset {
+public class TilesetData {
 
     public const int DefaultTileSize = 16;
     public const int EmptyTile = 0;
@@ -16,7 +15,7 @@ public class Tileset {
     private Dictionary<string, List<int>> _editorGroups;
     private List<Tile> _tiles;
 
-    public Tileset(string id, bool custom, string texturePath, Dictionary<string, List<int>> editorGroups, List<Tile> tiles) {
+    public TilesetData(string id, bool custom, string texturePath, Dictionary<string, List<int>> editorGroups, List<Tile> tiles) {
         _id = id;
         _isCustom = custom;
         _texturePath = texturePath;

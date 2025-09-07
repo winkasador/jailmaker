@@ -164,9 +164,9 @@ public class EditorScene : Scene.Scene {
                 _state.isMiddleMouseButtonClicked = false;
                 if(_state.middleClickStartTile == _mouseTilePosition) {
                     int tileSelection = _state.Map.GetTileAt(_mouseTilePosition, _state.activeFloor);
-                    if(tileSelection != Tileset.InvalidTile) {
-                        EditMode editMode = tileSelection == Tileset.EmptyTile ? EditMode.Erase : EditMode.Paint;
-                        var action = new SelectTileAction(_state, editMode, tileSelection == Tileset.EmptyTile ? _state.selectedTile : tileSelection);
+                    if(tileSelection != TilesetData.InvalidTile) {
+                        EditMode editMode = tileSelection == TilesetData.EmptyTile ? EditMode.Erase : EditMode.Paint;
+                        var action = new SelectTileAction(_state, editMode, tileSelection == TilesetData.EmptyTile ? _state.selectedTile : tileSelection);
                         _state.History.PostAndExecuteAction(action);
                     }
                 }
@@ -213,8 +213,8 @@ public class EditorScene : Scene.Scene {
                         _state.History.PostAndExecuteAction(action);
                         break;
                     case EditMode.Erase:
-                        if(_state.Map.GetTileAt(_mouseTilePosition, _state.activeFloor) == Tileset.EmptyTile) break;
-                        var eraseAction = new SetTileAction(_state.Map, _mouseTilePosition, _state.activeFloor, Tileset.EmptyTile);
+                        if(_state.Map.GetTileAt(_mouseTilePosition, _state.activeFloor) == TilesetData.EmptyTile) break;
+                        var eraseAction = new SetTileAction(_state.Map, _mouseTilePosition, _state.activeFloor, TilesetData.EmptyTile);
                         _state.History.PostAndExecuteAction(eraseAction);
                         break;
                     case EditMode.Select:
@@ -273,8 +273,8 @@ public class EditorScene : Scene.Scene {
         }
 
         if (_state.drawDebugWidgets) {
-            int tileWidth = _state.Map == null ? Tileset.DefaultTileSize : _state.Map.GetTilesetTileWidth();
-            int tileHeight = _state.Map == null ? Tileset.DefaultTileSize : _state.Map.GetTilesetTileHeight();
+            int tileWidth = _state.Map == null ? TilesetData.DefaultTileSize : _state.Map.GetTilesetTileWidth();
+            int tileHeight = _state.Map == null ? TilesetData.DefaultTileSize : _state.Map.GetTilesetTileHeight();
 
             _batch.Draw(_debugCameraTargetPositionTexture, _camera.TargetPosition - new Vector2(tileWidth / 2, tileHeight / 2), Color.White);
             _batch.Draw(_debugCameraPositionTexture, _camera.Position - new Vector2(tileWidth / 2, tileHeight / 2), Color.White);
@@ -389,7 +389,7 @@ public class EditorScene : Scene.Scene {
 
         if (map.TilesetData == null) {
             _logger.Warning($"Requested tileset \"{map.TilesetId}\" does not exist, falling back to default.");
-            var fallbackTileset = _contentManager.GetContent<Tileset>("escapists:tileset.perks");
+            var fallbackTileset = _contentManager.GetContent<TilesetData>("escapists:tileset.perks");
             if (fallbackTileset == null) {
                 _logger.Error("Could not load fallback tileset! Aborting map load.");
                 SetMap(null);
@@ -397,7 +397,7 @@ public class EditorScene : Scene.Scene {
                 return;
             }
             else {
-                map.ChangeTileset(_contentManager.GetContent<Tileset>("escapists:tileset.perks"));
+                map.ChangeTileset(_contentManager.GetContent<TilesetData>("escapists:tileset.perks"));
                 ShowMessage("Warning", $"The tileset this map is asking for \"{map.TilesetId}\" does not exist.\nJailmaker has selected a fallback one, however it may not look right.\n\nYou can select a valid tileset in the properties menu.");
             }
         }

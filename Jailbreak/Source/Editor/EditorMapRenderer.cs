@@ -44,11 +44,11 @@ public class EditorMapRenderer : MapRenderer {
     }
 
     public void DrawGrid(SpriteBatch batch, Map map, int cellWidth, int cellHeight) {
-        for (int x = 0; x <= (map.Width - 1) * Tileset.DefaultTileSize; x += cellWidth) {
-            batch.Draw(_pixelTexture, new Rectangle(x, 0, 1, map.Height * Tileset.DefaultTileSize), new Color(80, 80, 80, 100));
+        for (int x = 0; x <= (map.Width - 1) * TilesetData.DefaultTileSize; x += cellWidth) {
+            batch.Draw(_pixelTexture, new Rectangle(x, 0, 1, map.Height * TilesetData.DefaultTileSize), new Color(80, 80, 80, 100));
         }
-        for (int y = 0; y <= (map.Height - 1) * Tileset.DefaultTileSize; y += cellHeight) {
-            batch.Draw(_pixelTexture, new Rectangle(0, y, map.Width * Tileset.DefaultTileSize, 1), new Color(80, 80, 80, 100));
+        for (int y = 0; y <= (map.Height - 1) * TilesetData.DefaultTileSize; y += cellHeight) {
+            batch.Draw(_pixelTexture, new Rectangle(0, y, map.Width * TilesetData.DefaultTileSize, 1), new Color(80, 80, 80, 100));
         }
     }
 
@@ -78,7 +78,7 @@ public class EditorMapRenderer : MapRenderer {
         for(int y = 0; y < map.Height; y++) {
             for(int x = 0; x < map.Width; x++) {
                 int tile = tiles[y,x];
-                if(tile != Tileset.EmptyTile && map.TilesetData.Tiles[tile - 1].CastsShadow) {
+                if(tile != TilesetData.EmptyTile && map.TilesetData.Tiles[tile - 1].CastsShadow) {
                     batch.Draw(_pixelTexture, new Rectangle(x * 16, y * 16, 16, 16), _debugShadowCaster);
                 }
                 else {

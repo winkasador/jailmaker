@@ -3,7 +3,7 @@ using Jailbreak.Data.Dto;
 
 namespace Jailbreak.Content.Handler;
 
-public class TilesetContentHandler : IContentHandler<Tileset> {
+public class TilesetContentHandler : IContentHandler<TilesetData> {
     
     private DynamicContentManager _contentManager;
 
@@ -11,7 +11,7 @@ public class TilesetContentHandler : IContentHandler<Tileset> {
         _contentManager = contentManager;
     }
 
-    public Tileset Handle(byte[] bytes) {
+    public TilesetData Handle(byte[] bytes) {
         var yaml = System.Text.Encoding.UTF8.GetString(bytes);
         TilesetDto dto = _contentManager.GetDeserializer().Deserialize<TilesetDto>(yaml);
         return dto.ToTileset(_contentManager);

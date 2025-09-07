@@ -6,6 +6,7 @@ authors:
 credits:
   - name: Mouldy Toof Studios
   - name: Team17
+    links: [https://www.team17.com/]
 
 macros:
   Escapists: C:/Program Files (x86)/Steam/steamapps/common/The Escapists/Data/
@@ -15,10 +16,3 @@ content:
   image: [Content|Data/Textures]
   sound: [Content|Data/Sounds]
   bindings: [Content|Data/Bindings]
-
-roles:
-  general_font: Fonts/Escapists
-  editor_keybidings: bindings.editor
-  editor_camera_position_hint: image.camera_position_hint
-  editor_camera_target_hint: image.camera_target_hint
-  editor_title_font: Fonts/8BitSnobbery

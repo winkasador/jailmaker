@@ -1,5 +1,4 @@
 id: perks
-texture_path: Escapists|images/tiles_perks.gif
 tile_count: 100
 tiles:
   - index: 0
