@@ -27,8 +27,7 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager) {
     private readonly Dictionary<Type, object> _fallbackContent = new();
 
     private readonly Dictionary<Type, Dictionary<string, object>> _content = new();
-    [Obsolete]
-    private readonly Dictionary<string, ContentPredicate> _contentPredicates = new();
+    private readonly Dictionary<Type, Dictionary<string, ContentPredicate>> _contentRegistry = new();
 
     private readonly Dictionary<string, string> _filepathMacros = new();
 
@@ -52,16 +51,18 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager) {
         }
 
         _logger.Debug($"Content not found in library '{id}' (Type: '{type}'), trying to load from predicates.");
-        
-        if(_contentPredicates.ContainsKey(id) && _contentPredicates[id].DataType == typeof(T)) {
+
+        var predicates = _contentRegistry[type];
+
+        if (predicates.ContainsKey(id) && predicates[id].DataType == typeof(T)) {
             return LoadContent<T>(id);
         }
 
-        if(!_contentPredicates.ContainsKey(id)) {
+        if(!predicates.ContainsKey(id)) {
             _logger.Error($"Failed to get content '{id}' because it does not exist.");
         }
-        else if(_contentPredicates[id].DataType != typeof(T)) {
-            _logger.Error($"Failed to get content '{id}' because it is the wrong type (Expected '{type}', got '{_contentPredicates[id].DataType}').");
+        else if(predicates[id].DataType != typeof(T)) {
+            _logger.Error($"Failed to get content '{id}' because it is the wrong type (Expected '{type}', got '{predicates[id].DataType}').");
         }
 
         return GetFallbackContent<T>();
@@ -75,12 +76,15 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager) {
             _logger.Error($"Failed To Load Content with id '{predicateId}': Content Manager has no handler for '{type}'.");
             return GetFallbackContent<T>();
         }
-        if(!_contentPredicates.ContainsKey(predicateId)) {
+
+        var predicates = _contentRegistry[type];
+
+        if (!predicates.ContainsKey(predicateId)) {
             _logger.Error($"Failed To Load Content with id '{predicateId}': No Predicate Loaded for this ID.");
             return GetFallbackContent<T>();
         }
 
-        var predicate = _contentPredicates[predicateId];
+        var predicate = predicates[predicateId];
         if(!File.Exists(predicate.Path)) {
             _logger.Error($"Failed To Load Content with id '{predicateId}': file does not exist. Filepath: '{predicate.Path}'");
             return GetFallbackContent<T>();
@@ -107,23 +111,25 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager) {
     }
 
     public void DiscoverContent(ModDefinition activeMod) {
-        foreach(var kvp in _contentDiscoveryPaths) {
+        foreach (var kvp in _contentDiscoveryPaths) {
             int predicateCount = 0;
             _logger.Information($"Discovering Content in '{kvp.Value}'.");
             var path = ResolveFilePath(kvp.Value);
-            if(Directory.Exists(path)) {
-                foreach(string filePath in Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories)) {
-                    if(!filePath.EndsWith(".yml") && !filePath.EndsWith(".yaml")) continue;
+
+            var registry = new Dictionary<string, ContentPredicate>();
+            if (Directory.Exists(path)) {
+                foreach (string filePath in Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories)) {
+                    if (!filePath.EndsWith(".yml") && !filePath.EndsWith(".yaml")) continue;
 
                     var name = filePath.Replace("\\", "/").Split("/").Last().Replace(".yml", "").Replace(".yaml", "");
                     var id = $"{activeMod.Id}:{_typeNames[kvp.Key]}.{name}";
 
-                    if(_contentPredicates.ContainsKey(id)) {
+                    if (registry.ContainsKey(id)) {
                         _logger.Error($"Failed to load Content Predicate, an entry with the ID: '{id}' is already loaded.");
                         continue;
                     }
 
-                    _contentPredicates.Add(id, new ContentPredicate(id, filePath, kvp.Key));
+                    registry.Add(id, new ContentPredicate(id, filePath, kvp.Key));
 
                     _logger.Debug($"Content Predicate Registered: {id}");
                     predicateCount++;
@@ -133,9 +139,11 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager) {
             else {
                 _logger.Warning($"Did not discover any content in {kvp.Value} because the directory doesn't exist.");
             }
+
+            _contentRegistry.Add(kvp.Key, registry);
         }
 
-        _logger.Information($"Total of {_contentPredicates.Count:n0} content predicates discovered.");
+        _logger.Information($"Total of {_contentRegistry.Count:n0} content predicates discovered.");
     }
 
     public void RegisterMod(ModDefinition mod, GraphicsDevice device) {
