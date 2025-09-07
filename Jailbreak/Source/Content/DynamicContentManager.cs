@@ -122,7 +122,7 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager) {
                     if (!filePath.EndsWith(".yml") && !filePath.EndsWith(".yaml")) continue;
 
                     var name = filePath.Replace("\\", "/").Split("/").Last().Replace(".yml", "").Replace(".yaml", "");
-                    var id = $"{activeMod.Id}:{_typeNames[kvp.Key]}.{name}";
+                    var id = $"{activeMod.Id}:{name}";
 
                     if (registry.ContainsKey(id)) {
                         _logger.Error($"Failed to load Content Predicate, an entry with the ID: '{id}' is already loaded.");
