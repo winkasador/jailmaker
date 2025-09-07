@@ -38,7 +38,7 @@ public class Map {
         _height = DEFAULT_CUSTOM_MAP_HEIGHT;
         _floorCount = DEFAULT_FLOOR_COUNT;
         _tileLayers = new List<int[,]>(_floorCount);
-        _tilesetData = content.GetContent<TilesetData>("escapists/tileset.perks"); // TODO: Specify default tileset in Mod Manifest.
+        _tilesetData = content.GetContent<TilesetData>("escapists:perks"); // TODO: Specify default tileset in Mod Manifest.
 
         for (int floor = 0; floor < _floorCount; floor++) {
             _tileLayers.Add(new int[_height, _width]);
@@ -72,7 +72,7 @@ public class Map {
         _floorCount = DEFAULT_FLOOR_COUNT;
         _tileLayers = new List<int[,]>(_floorCount);
 
-        _tilesetData = content.GetContent<TilesetData>("escapists/tileset." + _tilesetId); // TODO: Remove hard dependency on 'escapists/'.
+        _tilesetData = content.GetContent<TilesetData>("escapists:" + _tilesetId); // TODO: Remove hard dependency on 'escapists/'.
 
         for (int floor = 0; floor < _floorCount; floor++) {
             _tileLayers.Add(new int[_height, _width]);

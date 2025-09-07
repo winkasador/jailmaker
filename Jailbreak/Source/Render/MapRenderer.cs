@@ -31,9 +31,9 @@ public class MapRenderer {
     public MapRenderer(GraphicsDevice graphicsDevice, DynamicContentManager _content) {
         _graphicsDevice = graphicsDevice;
 
-        _shadowTextures.Add(_content.GetContent<Texture2D>("escapists/image.shadow_full"));
-        _shadowTextures.Add(_content.GetContent<Texture2D>("escapists/image.shadow_corner_top"));
-        _shadowTextures.Add(_content.GetContent<Texture2D>("escapists/image.shadow_corner_bottom"));
+        _shadowTextures.Add(_content.GetContent<Texture2D>("escapists:shadow_full"));
+        _shadowTextures.Add(_content.GetContent<Texture2D>("escapists:shadow_corner_top"));
+        _shadowTextures.Add(_content.GetContent<Texture2D>("escapists:shadow_corner_bottom"));
         //_shadowTextures.Add(_content.LoadTexture("escapists/Textures/Shadow/ShadowPipeHorizontal", "shadow_pipe_horizontal"));
         //_shadowTextures.Add(_content.LoadTexture("escapists/Textures/Shadow/ShadowPipeVertical", "shadow_pipe_vertical"));
 
