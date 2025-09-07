@@ -111,6 +111,8 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager) {
     }
 
     public void DiscoverContent(ModDefinition activeMod) {
+        int count = 0;
+
         foreach (var kvp in _contentDiscoveryPaths) {
             int predicateCount = 0;
             _logger.Information($"Discovering Content in '{kvp.Value}'.");
@@ -135,6 +137,7 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager) {
                     predicateCount++;
                 }
                 _logger.Debug($"Discovered {predicateCount} content predicate(s) in {kvp.Value}.");
+                count += predicateCount;
             }
             else {
                 _logger.Warning($"Did not discover any content in {kvp.Value} because the directory doesn't exist.");
@@ -143,7 +146,7 @@ public class DynamicContentManager(Jailbreak jailbreak, ModManager modManager) {
             _contentRegistry.Add(kvp.Key, registry);
         }
 
-        _logger.Information($"Total of {_contentRegistry.Count:n0} content predicates discovered.");
+        _logger.Information($"Total of {count} content predicates discovered.");
     }
 
     public void RegisterMod(ModDefinition mod, GraphicsDevice device) {
