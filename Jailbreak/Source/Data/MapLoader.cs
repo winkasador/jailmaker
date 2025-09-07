@@ -11,7 +11,7 @@ namespace Jailbreak.Data;
 
 public class MapLoader {
 
-    private ILogger _logger = Log.ForContext<MapLoader>();
+    private readonly ILogger _logger = Log.ForContext<MapLoader>();
 
     public MapLoadResult LoadMap(DynamicContentManager content, string path, bool isEncrypted) {
         if (!File.Exists(path)) {

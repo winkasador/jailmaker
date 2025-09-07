@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Jailbreak.Content;
-using static Jailbreak.Data.Tileset;
+using static Jailbreak.Data.TilesetData;
 
 namespace Jailbreak.Data.Dto;
 
@@ -13,7 +13,7 @@ public class TilesetDto {
     public List<TileDto> Tiles { get; set; } = new();
     public Dictionary<string, List<int>> EditorGroups = new();
 
-    public Tileset ToTileset(DynamicContentManager contentManager) {
+    public TilesetData ToTileset(DynamicContentManager contentManager) {
         Tile defaultTile = new TileDto() {
             HasShadow = false,
         }.ToTile();
@@ -36,9 +36,9 @@ public class TilesetDto {
         }
 
         if(contentManager == null) {
-            return new Tileset(Id, Custom, TexturePath.Path, EditorGroups, compiledTiles);
+            return new TilesetData(Id, Custom, TexturePath.Path, EditorGroups, compiledTiles);
         }
-        return new Tileset(Id, Custom, contentManager.ResolveFilePath(TexturePath.Path), EditorGroups, compiledTiles);
+        return new TilesetData(Id, Custom, contentManager.ResolveFilePath(TexturePath.Path), EditorGroups, compiledTiles);
     }
 
 }

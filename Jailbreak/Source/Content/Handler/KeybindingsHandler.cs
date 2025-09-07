@@ -11,7 +11,7 @@ public class KeybindingsHandler : IContentHandler<List<KeyBinding>> {
     public KeybindingsHandler(DynamicContentManager contentManager) {
         _contentManager = contentManager;
     }
-
+    
     public List<KeyBinding> Handle(byte[] data) {
         List<KeyBinding> bindings = new();
 

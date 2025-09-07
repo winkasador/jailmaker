@@ -1,4 +1,4 @@
-using static Jailbreak.Data.Tileset;
+using static Jailbreak.Data.TilesetData;
 
 namespace Jailbreak.Data.Dto;
 

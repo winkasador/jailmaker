@@ -27,7 +27,7 @@ public class Map {
     private int _floorCount;
     private List<int[,]> _tileLayers;
     private string _tilesetId;
-    private Tileset _tilesetData;
+    private TilesetData _tilesetData;
     private bool _isCustom;
 
 
@@ -38,7 +38,7 @@ public class Map {
         _height = DEFAULT_CUSTOM_MAP_HEIGHT;
         _floorCount = DEFAULT_FLOOR_COUNT;
         _tileLayers = new List<int[,]>(_floorCount);
-        _tilesetData = content.GetContent<Tileset>("escapists/tileset.perks"); // TODO: Specify default tileset in Mod Manifest.
+        _tilesetData = content.GetContent<TilesetData>("escapists:perks"); // TODO: Specify default tileset in Mod Manifest.
 
         for (int floor = 0; floor < _floorCount; floor++) {
             _tileLayers.Add(new int[_height, _width]);
@@ -72,7 +72,7 @@ public class Map {
         _floorCount = DEFAULT_FLOOR_COUNT;
         _tileLayers = new List<int[,]>(_floorCount);
 
-        _tilesetData = content.GetContent<Tileset>("escapists/tileset." + _tilesetId); // TODO: Remove hard dependency on 'escapists/'.
+        _tilesetData = content.GetContent<TilesetData>("escapists:" + _tilesetId); // TODO: Remove hard dependency on 'escapists/'.
 
         for (int floor = 0; floor < _floorCount; floor++) {
             _tileLayers.Add(new int[_height, _width]);
@@ -201,7 +201,7 @@ public class Map {
         get { return _tilesetId; }
     }
 
-    public Tileset TilesetData {
+    public TilesetData TilesetData {
         get { return _tilesetData; }
         private set { _tilesetData = value; }
     }
@@ -265,7 +265,7 @@ public class Map {
         return point.X >= 0 && point.X < _width && point.Y >= 0 && point.Y < _height;
     }
 
-    public void ChangeTileset(Tileset tileset) {
+    public void ChangeTileset(TilesetData tileset) {
         TilesetData = tileset;
         ComputeShadows();
     }

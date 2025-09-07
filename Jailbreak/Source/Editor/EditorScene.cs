@@ -61,7 +61,7 @@ public class EditorScene : Scene.Scene {
     private EditorDebugHUD _debugHUD;
     private Window _tilePaletteWindow;
     private EditorNoMapLoadedScreen _noMapLoadedScreen;
-    private EditorMapPropertiesWindow _propertiesWindow;
+    private PropertiesWindow _propertiesWindow;
 
 
     public EditorScene(Jailbreak game) : base(game) {
@@ -70,15 +70,15 @@ public class EditorScene : Scene.Scene {
         _contentManager = game.ContentManager;
         _inputManager = game.InputManager;
 
-        _inputManager.LoadBindingGroup(_contentManager.GetContent<List<KeyBinding>>("escapists:bindings.editor"));
+        _inputManager.LoadBindingGroup(_contentManager.GetContent<List<KeyBinding>>("escapists:editor"));
 
         _state = new EditorState();
 
         _camera = new Camera(Game.GraphicsDevice.Viewport);
         _renderer = new EditorMapRenderer(Game.GraphicsDevice, _contentManager);
 
-        _debugCameraPositionTexture = _contentManager.GetContent<Texture2D>("escapists:image.camera_position_hint");
-        _debugCameraTargetPositionTexture = _contentManager.GetContent<Texture2D>("escapists:image.camera_target_hint");
+        _debugCameraPositionTexture = _contentManager.GetContent<Texture2D>("escapists:camera_position_hint");
+        _debugCameraTargetPositionTexture = _contentManager.GetContent<Texture2D>("escapists:camera_target_hint");
 
         _pixelTexture = new Texture2D(Game.GraphicsDevice, 1, 1);
         _pixelTexture.SetData([Color.White]);
@@ -117,7 +117,7 @@ public class EditorScene : Scene.Scene {
         _tilePaletteWindow.Content = new EditorTilePalette(_state, _renderer);
         _tilePaletteWindow.Visible = false;
 
-        _propertiesWindow = new EditorMapPropertiesWindow();
+        _propertiesWindow = new PropertiesWindow();
         _propertiesWindow.Visible = false;
 
         _desktop.Widgets.Add(_tilePaletteWindow);
@@ -164,9 +164,9 @@ public class EditorScene : Scene.Scene {
                 _state.isMiddleMouseButtonClicked = false;
                 if(_state.middleClickStartTile == _mouseTilePosition) {
                     int tileSelection = _state.Map.GetTileAt(_mouseTilePosition, _state.activeFloor);
-                    if(tileSelection != Tileset.InvalidTile) {
-                        EditMode editMode = tileSelection == Tileset.EmptyTile ? EditMode.Erase : EditMode.Paint;
-                        var action = new SelectTileAction(_state, editMode, tileSelection == Tileset.EmptyTile ? _state.selectedTile : tileSelection);
+                    if(tileSelection != TilesetData.InvalidTile) {
+                        EditMode editMode = tileSelection == TilesetData.EmptyTile ? EditMode.Erase : EditMode.Paint;
+                        var action = new SelectTileAction(_state, editMode, tileSelection == TilesetData.EmptyTile ? _state.selectedTile : tileSelection);
                         _state.History.PostAndExecuteAction(action);
                     }
                 }
@@ -213,8 +213,8 @@ public class EditorScene : Scene.Scene {
                         _state.History.PostAndExecuteAction(action);
                         break;
                     case EditMode.Erase:
-                        if(_state.Map.GetTileAt(_mouseTilePosition, _state.activeFloor) == Tileset.EmptyTile) break;
-                        var eraseAction = new SetTileAction(_state.Map, _mouseTilePosition, _state.activeFloor, Tileset.EmptyTile);
+                        if(_state.Map.GetTileAt(_mouseTilePosition, _state.activeFloor) == TilesetData.EmptyTile) break;
+                        var eraseAction = new SetTileAction(_state.Map, _mouseTilePosition, _state.activeFloor, TilesetData.EmptyTile);
                         _state.History.PostAndExecuteAction(eraseAction);
                         break;
                     case EditMode.Select:
@@ -273,8 +273,8 @@ public class EditorScene : Scene.Scene {
         }
 
         if (_state.drawDebugWidgets) {
-            int tileWidth = _state.Map == null ? Tileset.DefaultTileSize : _state.Map.GetTilesetTileWidth();
-            int tileHeight = _state.Map == null ? Tileset.DefaultTileSize : _state.Map.GetTilesetTileHeight();
+            int tileWidth = _state.Map == null ? TilesetData.DefaultTileSize : _state.Map.GetTilesetTileWidth();
+            int tileHeight = _state.Map == null ? TilesetData.DefaultTileSize : _state.Map.GetTilesetTileHeight();
 
             _batch.Draw(_debugCameraTargetPositionTexture, _camera.TargetPosition - new Vector2(tileWidth / 2, tileHeight / 2), Color.White);
             _batch.Draw(_debugCameraPositionTexture, _camera.Position - new Vector2(tileWidth / 2, tileHeight / 2), Color.White);
@@ -389,7 +389,7 @@ public class EditorScene : Scene.Scene {
 
         if (map.TilesetData == null) {
             _logger.Warning($"Requested tileset \"{map.TilesetId}\" does not exist, falling back to default.");
-            var fallbackTileset = _contentManager.GetContent<Tileset>("escapists:tileset.perks");
+            var fallbackTileset = _contentManager.GetContent<TilesetData>("escapists:perks");
             if (fallbackTileset == null) {
                 _logger.Error("Could not load fallback tileset! Aborting map load.");
                 SetMap(null);
@@ -397,18 +397,18 @@ public class EditorScene : Scene.Scene {
                 return;
             }
             else {
-                map.ChangeTileset(_contentManager.GetContent<Tileset>("escapists:tileset.perks"));
+                map.ChangeTileset(_contentManager.GetContent<TilesetData>("escapists:perks"));
                 ShowMessage("Warning", $"The tileset this map is asking for \"{map.TilesetId}\" does not exist.\nJailmaker has selected a fallback one, however it may not look right.\n\nYou can select a valid tileset in the properties menu.");
             }
         }
 
         var undergroundTexture = _state.Map.IsCustom ?
-            _contentManager.GetContent<Texture2D>("escapists:image.ground_soil_custom") :
-            _contentManager.GetContent<Texture2D>("escapists:image.ground_soil");
+            _contentManager.GetContent<Texture2D>("escapists:ground_soil_custom") :
+            _contentManager.GetContent<Texture2D>("escapists:ground_soil");
 
         _renderer.UndergroundTexture = undergroundTexture;
-        _renderer.GroundTexture = _contentManager.GetContent<Texture2D>("escapists:image.ground_" + map.TilesetData.Id);
-        _renderer.TilesetTexture = _contentManager.GetContent<Texture2D>("escapists:image." + map.TilesetData.Id);
+        _renderer.GroundTexture = _contentManager.GetContent<Texture2D>("escapists:ground_" + map.TilesetData.Id);
+        _renderer.TilesetTexture = _contentManager.GetContent<Texture2D>("escapists:" + map.TilesetData.Id);
 
         _camera.Bounds = new Rectangle(0, 0, map.Width * map.GetTilesetTileWidth(), map.Height * map.GetTilesetTileHeight());
 

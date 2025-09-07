@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
-using Jailbreak.Content;
+﻿using Jailbreak.Content;
 using Jailbreak.Editor;
 using Jailbreak.Input;
 using Jailbreak.Scene;
@@ -11,17 +9,15 @@ using System.Linq;
 using Jailbreak.Content.Handler;
 using Serilog;
 using Jailbreak.Utility;
+using Jailbreak.Bootstrap;
 
 namespace Jailbreak;
 
 public class Jailbreak : Game {
 
-    private ModDefinition _mod;
     private ILogger _logger;
 
     private GraphicsDeviceManager _graphics;
-
-    private IServiceProvider _services;
 
     private bool _isInitialized = false;
     
@@ -43,10 +39,6 @@ public class Jailbreak : Game {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content/";
         IsMouseVisible = true;
-    }
-
-    public ModDefinition Mod {
-        get { return _mod; }
     }
 
     protected override void Initialize() {
@@ -92,7 +84,6 @@ public class Jailbreak : Game {
         }
         else if (modCount == 1 && !IsDebugMode) {
             ModManager.SelectMod(mods.First().Key);
-            _mod = ModManager.ActiveMod;
         }
         else {
             LaunchModSelector();
@@ -103,7 +94,7 @@ public class Jailbreak : Game {
     }
 
     public void FinishInitialization() {
-        ContentManager.RegisterMod(_mod, GraphicsDevice);
+        ContentManager.RegisterMod(ModManager.ActiveMod, GraphicsDevice);
 
         InputManager = new InputManager();
         InputManager.Game = this;

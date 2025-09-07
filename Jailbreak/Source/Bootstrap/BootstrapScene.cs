@@ -1,8 +1,7 @@
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Jailbreak;
+namespace Jailbreak.Bootstrap;
 
 public class BootstrapScene : Scene.Scene {
 
@@ -24,7 +23,9 @@ public class BootstrapScene : Scene.Scene {
         int yPos = 5;
 
         _batch.Begin(samplerState: SamplerState.PointClamp);
-        _batch.Draw(_errorBackdropImage, new Rectangle(0, 0, Game.GraphicsDevice.Viewport.Width, Game.GraphicsDevice.Viewport.Height), Color.Gray);
+        Rectangle destRect = new Rectangle(0, 0, Game.GraphicsDevice.Viewport.Width, Game.GraphicsDevice.Viewport.Height);
+
+        _batch.Draw(_errorBackdropImage, destRect, Color.Gray);
 
         _batch.DrawString(_font, "Something Went Wrong...", new Vector2(5, yPos), Color.White);
         _batch.DrawString(_font, "Jailmaker could not find a valid installation of the Escapists.", new Vector2(5, yPos += lineHeight * 2), Color.White);

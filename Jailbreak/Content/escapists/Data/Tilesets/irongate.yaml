@@ -1,5 +1,4 @@
 id: irongate
-texture_path: Escapists|images/tiles_irongate.gif
 tile_count: 100
 editor_groups:
   checkered_tile: [1, 2]
