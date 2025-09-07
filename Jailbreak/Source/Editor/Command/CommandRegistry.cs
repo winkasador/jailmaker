@@ -11,6 +11,7 @@ public class CommandRegistry {
         _commands.Add("editor.undo", new DelegateCommand(ctx => ctx.State.History.UndoAndRemoveLatestAction()));
         _commands.Add("editor.toggle_tile_palette", new DelegateCommand(ctx => ctx.ToggleTileWindow()));
         _commands.Add("editor.quit", new DelegateCommand(ctx => ctx.QuitApplication()));
+        _commands.Add("editor.show_grid", new DelegateCommand(ctx => ctx.State.drawGrid = !ctx.State.drawGrid));
     }
 
     public ICommand GetCommand(string commandName) {

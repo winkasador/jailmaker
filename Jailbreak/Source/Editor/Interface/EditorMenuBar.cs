@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using Jailbreak.Input;
-using Microsoft.Extensions.DependencyInjection;
 using Myra.Graphics2D.UI;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
@@ -12,12 +10,15 @@ namespace Jailbreak.Editor.Interface;
 
 public class EditorMenuBar : HorizontalMenu {
 
-    private MenuItem _fileMenu;
     private InputManager _inputManager;
-    private Dictionary<CommandRegistry.CommandRequirement, MenuItem> _contextualMenuItems;
 
     private EditorScene _editor;
     private CommandRegistry _registry;
+
+    private MenuItem _fileMenu;
+    private MenuItem _viewMenu;
+
+    private Dictionary<CommandRegistry.CommandRequirement, MenuItem> _contextualMenuItems;
 
     public EditorMenuBar(EditorScene editor, InputManager inputManager, CommandRegistry registry) {
         _contextualMenuItems = new();
@@ -27,6 +28,7 @@ public class EditorMenuBar : HorizontalMenu {
         _registry = registry;
 
         SetUpFileMenu();
+        SetUpViewMenu();
 
         foreach (MenuItem item in MenuHelper.GetAllMenuItems(this)) {
             AddShortcutInformation(item);
@@ -56,6 +58,19 @@ public class EditorMenuBar : HorizontalMenu {
         _fileMenu.Items.Add(exitMenuItem);
 
         Items.Add(_fileMenu);
+    }
+
+    private void SetUpViewMenu() {
+        _viewMenu = new MenuItem("view", "View");
+
+        MenuItem gridVisibilityItem = new MenuItem("editor.toggle_grid", "Show Grid");
+        gridVisibilityItem.Selected += (s, a) => {
+            _registry.GetCommand("editor.show_grid").Execute(new CommandContext(_editor));
+        };
+
+        _viewMenu.Items.Add(gridVisibilityItem);
+
+        Items.Add(_viewMenu);
     }
     
     private void AddShortcutInformation(MenuItem item) {
