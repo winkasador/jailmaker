@@ -26,14 +26,14 @@ public class EditorMenuBar : HorizontalMenu {
         _editor = editor;
         _registry = registry;
 
-        SetupFileMenu();
+        SetUpFileMenu();
 
         foreach (MenuItem item in MenuHelper.GetAllMenuItems(this)) {
             AddShortcutInformation(item);
         }
     }
 
-    private void SetupFileMenu() {
+    private void SetUpFileMenu() {
         _fileMenu = new MenuItem("file", "File");
 
         MenuItem openFileDialog = new MenuItem("editor.open_file", "Open Project...");
@@ -46,7 +46,7 @@ public class EditorMenuBar : HorizontalMenu {
         };
         MenuItem exitMenuItem = new MenuItem("editor.quit", "Quit");
         exitMenuItem.Selected += (s, a) => {
-            // Game.Exit();
+            _registry.GetCommand("editor.quit").Execute(new CommandContext(_editor));
         };
 
         _fileMenu.Items.Add(openFileDialog);
@@ -57,7 +57,7 @@ public class EditorMenuBar : HorizontalMenu {
 
         Items.Add(_fileMenu);
     }
-
+    
     private void AddShortcutInformation(MenuItem item) {
         string text = "";
 
@@ -66,7 +66,7 @@ public class EditorMenuBar : HorizontalMenu {
             foreach (Keys key in binding.PrimaryModifiers) {
                 text += key + "+";
             }
-            
+
             text += binding.PrimaryKey;
         }
         if (binding.SecondaryKey != Keys.None) {
@@ -75,7 +75,7 @@ public class EditorMenuBar : HorizontalMenu {
             foreach (Keys key in binding.SecondaryModifiers) {
                 text += key + "+";
             }
-            
+
             text += binding.SecondaryKey;
         }
 
